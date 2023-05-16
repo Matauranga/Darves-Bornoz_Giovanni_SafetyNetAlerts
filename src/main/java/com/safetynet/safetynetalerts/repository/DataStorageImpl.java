@@ -24,9 +24,6 @@ public class DataStorageImpl implements DataStorage {
 
     private DataObject dataObject;
 
-    /**
-     *
-     */
     @Override
     @PostConstruct
     public void initDatas() throws IOException {
@@ -35,27 +32,19 @@ public class DataStorageImpl implements DataStorage {
         this.dataObject = objectMapper.readValue(datas, DataObject.class);
     }
 
-    /**
-     * @return
-     */
     @Override
     public List<Person> getPersons() {
         return dataObject.getPersons();
     }
 
-    /**
-     * @return
-     */
     @Override
     public List<Firestation> getFirestations() {
         return dataObject.getFirestations();
     }
 
-    /**
-     * @return
-     */
     @Override
     public List<MedicalRecord> getMedicalRecords() {
         return dataObject.getMedicalrecords();
     }
+
 }

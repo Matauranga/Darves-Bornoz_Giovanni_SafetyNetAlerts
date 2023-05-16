@@ -16,4 +16,8 @@ public interface DataStorage {
     List<Firestation> getFirestations();
 
     List<MedicalRecord> getMedicalRecords();
+
 }
+
+
+

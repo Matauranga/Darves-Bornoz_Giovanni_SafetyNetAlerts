@@ -13,4 +13,7 @@ public class DataObject {
     List<Person> persons;
     List<MedicalRecord> medicalrecords;
     List<Firestation> firestations;
+
 }
+
+
