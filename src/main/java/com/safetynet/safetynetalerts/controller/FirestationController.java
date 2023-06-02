@@ -1,24 +1,45 @@
 package com.safetynet.safetynetalerts.controller;
 
+import com.safetynet.safetynetalerts.business.FirestationService;
 import com.safetynet.safetynetalerts.model.Firestation;
-import com.safetynet.safetynetalerts.repository.DataStorage;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/firestation")
 public class FirestationController {
+
     @Autowired
-    private DataStorage dataStorage;
+    private FirestationService firestationService;
 
-    @GetMapping(value = "/firestation")
-    public List<Firestation> listFirestations() throws IOException {
-
-        List<Firestation> listFirestations = dataStorage.getFirestations();
-
+    @GetMapping
+    public List<Firestation> listFirestations() {
+        List<Firestation> listFirestations = firestationService.getAllFirestations();
         return listFirestations;
     }
+
+    @PostMapping
+    public ResponseEntity<Firestation> createFirestation(@Valid @RequestBody Firestation firestation) {
+        firestationService.createFirstation(firestation);
+        return new ResponseEntity<>(firestation, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<Firestation> updateFirestation(@Valid @RequestBody Firestation firestation) {
+        firestationService.updateFirestation(firestation);
+        return new ResponseEntity<>(firestation, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping
+    public ResponseEntity<HttpStatus> deleteFirestation(@Valid @RequestBody Firestation firestation) {
+        firestationService.deleteFirestation(firestation);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
 }
