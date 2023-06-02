@@ -2,38 +2,51 @@ package com.safetynet.safetynetalerts.controller;
 
 import com.safetynet.safetynetalerts.business.PersonService;
 import com.safetynet.safetynetalerts.model.Person;
-import com.safetynet.safetynetalerts.repository.DataStorage;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.*;
-import java.net.URI;
 import java.util.List;
 
 @RestController
 public class PersonController {
-    @Autowired
-    private DataStorage dataStorage;
+    private final String urlEndpointPerson = "/person";
     @Autowired
     private PersonService personService;
 
-    @GetMapping(value = "/person")
-    public List<Person> listPersons() {
-
-        return dataStorage.getPersons();
+    @GetMapping(value = urlEndpointPerson)
+    public List<Person> getListPersons() {
+        List<Person> listPersons = personService.getAllPersons();
+        return listPersons;
     }
 
-    @PostMapping(value = "/person")
-    public ResponseEntity<Person> createPerson(@RequestBody Person person) {
-        List<Person> createdPerson = personService.createPerson(person);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .buildAndExpand(createdPerson)
-                .toUri();
-        return ResponseEntity.created(location).build();
+   /* @GetMapping(value = "/person/{id}")
+    public Person getPersonById(@PathVariable String id) {
+        Person person = personService.getPersonById(id);
+        return person;
+    }*/
+
+    @PostMapping(value = urlEndpointPerson)
+    public ResponseEntity<Person> createPerson(@Valid @RequestBody Person person) {
+        personService.createPerson(person);
+        return new ResponseEntity<>(person, HttpStatus.CREATED);
     }
+
+    @PutMapping(value = urlEndpointPerson)
+    public ResponseEntity<Person> updatePerson(@Valid @RequestBody Person person) {
+        personService.updatePerson(person);
+        return new ResponseEntity<>(person, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = urlEndpointPerson)
+    public ResponseEntity<HttpStatus> deletePerson(@Valid @RequestBody Person person) {
+        personService.deletePerson(person);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+
 }
 
 
