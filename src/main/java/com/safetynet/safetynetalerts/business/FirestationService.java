@@ -8,20 +8,35 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ *
+ */
 @Service
 public class FirestationService {
     @Autowired
     FirestationRepository firestationRepository;
 
+    /**
+     *
+     * @return all firestatino
+     */
     public List<Firestation> getAllFirestations() {
         return firestationRepository.getAll();
     }
 
+    /**
+     *
+     * @param firestation to create
+     */
     public void createFirstation(Firestation firestation) {
 
         firestationRepository.saveOrUpdate(firestation);
     }
 
+    /**
+     *
+     * @param updateFirestation
+     */
     public void updateFirestation(Firestation updateFirestation) {
 
         Firestation firestation = firestationRepository.getAll()
@@ -34,6 +49,10 @@ public class FirestationService {
         firestationRepository.saveOrUpdate(updateFirestation);
     }
 
+    /**
+     *
+     * @param firestationToDelete
+     */
     public void deleteFirestation(Firestation firestationToDelete) {
         firestationRepository.delete(firestationToDelete.getId());
     }

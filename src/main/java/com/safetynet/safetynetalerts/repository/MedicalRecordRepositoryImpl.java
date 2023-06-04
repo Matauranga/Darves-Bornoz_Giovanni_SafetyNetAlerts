@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+//Todo: javadoc
 @Service
 public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     private static final Logger logger = LogManager.getLogger("SafetyNet Alerts");

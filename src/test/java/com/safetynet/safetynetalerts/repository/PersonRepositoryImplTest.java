@@ -92,7 +92,7 @@ class PersonRepositoryImplTest {
         //WHEN
         personRepositoryImpl.saveOrUpdate(personToCreate);
         when(dataStorage.getPersons()).thenReturn(new ArrayList<>(List.of()));
-        //THEN TODO: quoi tester ? suffisant ?
+        //THEN
         verify(dataStorage, times(2)).getPersons();
 
     }
@@ -113,9 +113,8 @@ class PersonRepositoryImplTest {
 
     @Disabled
     @Test
-    void updatePersonNotFoundExcpetionTest() { //inutile car si non trouver alors cest getId qui renvoir l'err
+    void updatePersonNotFoundExcpetionTest() { //todo :inutile car si non trouver alors cest getId qui renvoie l'err
         // GIVEN
-        //TODO : me donne bien l'exception mais du coup le test plante
         final Person expectedPerson = new Person("Paul", "Machin", null, null, null, null, null);
         final Person modifyPerson = new Person("Paul", "Ricard", "123 Mayol", null, null, null, null);
         // WHEN

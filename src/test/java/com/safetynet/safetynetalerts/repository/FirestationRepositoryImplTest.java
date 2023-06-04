@@ -79,7 +79,7 @@ public class FirestationRepositoryImplTest {
         //WHEN
         when(dataStorage.getFirestations()).thenReturn(new ArrayList<>(List.of(expectedFirestation)));
         firestationRepositoryImpl.saveOrUpdate(wantedFirestation);
-        //THEN TODO: quoi tester ? suffisant ?
+        //THEN
         verify(dataStorage, times(3)).getFirestations();
 
     }
@@ -92,7 +92,7 @@ public class FirestationRepositoryImplTest {
         //WHEN
         when(dataStorage.getFirestations()).thenReturn(new ArrayList<>(List.of(expectedFirestation)));
         firestationRepositoryImpl.delete(expectedFirestation.getId());
-        //THEN TODO: Suffisant?
+        //THEN
         verify(dataStorage, times(2)).getFirestations();
 
     }
@@ -104,7 +104,7 @@ public class FirestationRepositoryImplTest {
         //WHEN
         when(dataStorage.getFirestations()).thenReturn(new ArrayList<>(List.of()));
         firestationRepositoryImpl.delete(expectedFirestation.getId());
-        //THEN TODO: Suffisant?
+        //THEN
         verify(dataStorage, times(1)).getFirestations();
 
     }

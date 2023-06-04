@@ -74,7 +74,7 @@ public class MedicalRecordRepositoryImplTest {
         medicalRecordRepositoryImpl.saveOrUpdate(expectedMedicalRecord);
         when(dataStorage.getFirestations()).thenReturn(new ArrayList<>(List.of()));
 
-        //THEN TODO: quoi tester ? suffisant ?
+        //THEN
         verify(dataStorage, times(2)).getMedicalRecords();
 
     }
@@ -124,7 +124,7 @@ public class MedicalRecordRepositoryImplTest {
         //WHEN
         when(dataStorage.getMedicalRecords()).thenReturn(new ArrayList<>(List.of(expectedMedicalRecord)));
         medicalRecordRepositoryImpl.delete(expectedMedicalRecord.getId());
-        //THEN TODO: Suffisant?
+        //THEN
         verify(dataStorage, times(2)).getMedicalRecords();
 
     }
@@ -137,7 +137,7 @@ public class MedicalRecordRepositoryImplTest {
         //WHEN
         when(dataStorage.getMedicalRecords()).thenReturn(new ArrayList<>(List.of()));
         medicalRecordRepositoryImpl.delete(expectedMedicalRecord.getId());
-        //THEN TODO: Suffisant?
+        //THEN
         verify(dataStorage, times(1)).getMedicalRecords();
 
     }

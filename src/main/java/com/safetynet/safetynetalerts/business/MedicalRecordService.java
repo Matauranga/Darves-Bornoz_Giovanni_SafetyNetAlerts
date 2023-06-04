@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ *
+ */
 @Service
 public class MedicalRecordService {
 
@@ -17,36 +20,52 @@ public class MedicalRecordService {
     @Autowired
     MedicalRecordRepository medicalRecordRepository;
 
+    /**
+     * @return all medical record
+     */
     public List<MedicalRecord> getAllMedicalRecords() {
         return medicalRecordRepository.getAll();
     }
 
-   /* public MedicalRecord getMedicalRecordById(String id) {
+    /**
+     * @param id firstname and lastname of the person whose medical record sought
+     * @return the medical record search
+     */
+    public MedicalRecord getMedicalRecordById(String id) {
 
         List<MedicalRecord> medicalRecords = dataStorage.getMedicalRecords();
         return medicalRecords
                 .stream()
                 .filter(medicalRecord -> id.equals(medicalRecord.getId()))
                 .findFirst().orElse(null);
-    }*/
+    }
 
+    /**
+     * @param medicalRecord to create
+     */
     public void createMedicalRecord(MedicalRecord medicalRecord) {
         medicalRecordRepository.saveOrUpdate(medicalRecord);
 
     }
 
+    /**
+     * @param updateMedicalRecord
+     */
     public void updateMedicalRecord(MedicalRecord updateMedicalRecord) {
 
         MedicalRecord medicalRecord = medicalRecordRepository.getAll()
                 .stream()
                 .filter(p -> updateMedicalRecord.getId().equals(p.getId()))
                 .findFirst()
-                .orElseThrow(() ->  new MedicalRecordNotFoundException(updateMedicalRecord.getFirstName(), updateMedicalRecord.getLastName()))
+                .orElseThrow(() -> new MedicalRecordNotFoundException(updateMedicalRecord.getFirstName(), updateMedicalRecord.getLastName()))
                 .update(updateMedicalRecord);
 
         medicalRecordRepository.saveOrUpdate(medicalRecord);
     }
 
+    /**
+     * @param medicalRecordToDelete
+     */
     public void deleteMedicalRecord(MedicalRecord medicalRecordToDelete) {
         medicalRecordRepository.delete(medicalRecordToDelete.getId());
 

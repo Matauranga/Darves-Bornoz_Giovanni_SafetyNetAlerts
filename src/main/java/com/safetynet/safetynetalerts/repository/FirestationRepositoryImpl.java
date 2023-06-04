@@ -1,6 +1,5 @@
 package com.safetynet.safetynetalerts.repository;
 
-import com.safetynet.safetynetalerts.exceptions.FirestationNotFoundException;
 import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.Firestation;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+//Todo: javadoc
 @Service
 public class FirestationRepositoryImpl implements FirestationRepository {
     private static final Logger logger = LogManager.getLogger("SafetyNet Alerts");
@@ -33,7 +33,6 @@ public class FirestationRepositoryImpl implements FirestationRepository {
         return firestation;
     }
 
-    //TODO : methode save et update qui recrée de nouvelle entité
     @Override
     public Firestation saveOrUpdate(Firestation entity) {
 
@@ -49,6 +48,7 @@ public class FirestationRepositoryImpl implements FirestationRepository {
         return entity;
     }
 
+    //Todo : return infos sur le delete (code derr ou de réussite)?
     @Override
     public void delete(String id) {
         Firestation firestationToDelete = dataStorage.getFirestations()

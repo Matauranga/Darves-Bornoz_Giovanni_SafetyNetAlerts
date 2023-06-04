@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/person")
 public class PersonController {
-    private final String urlEndpointPerson = "/person";
     @Autowired
     private PersonService personService;
 
-    @GetMapping(value = urlEndpointPerson)
+    @GetMapping()
     public List<Person> getListPersons() {
         List<Person> listPersons = personService.getAllPersons();
         return listPersons;
@@ -28,23 +28,47 @@ public class PersonController {
         return person;
     }*/
 
-    @PostMapping(value = urlEndpointPerson)
+    @PostMapping()
     public ResponseEntity<Person> createPerson(@Valid @RequestBody Person person) {
         personService.createPerson(person);
         return new ResponseEntity<>(person, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = urlEndpointPerson)
+    @PutMapping()
     public ResponseEntity<Person> updatePerson(@Valid @RequestBody Person person) {
         personService.updatePerson(person);
         return new ResponseEntity<>(person, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = urlEndpointPerson)
+    @DeleteMapping()
     public ResponseEntity<HttpStatus> deletePerson(@Valid @RequestBody Person person) {
         personService.deletePerson(person);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
+
+//    /**************************************** //TODO url a corriger ***********************************/
+/*
+    @GetMapping("/childAlert")
+    public List<ChildDTO> childAlertByAddress(@RequestParam String address) {
+        List<ChildDTO> listChildPresentAtAddress = personService.getChildByAddress(address);
+        //log.info
+        return listChildPresentAtAddress;
+    }
+
+    @GetMapping("/phoneAlert")
+    public List<String> phoneAlertByFirestationNumber(@RequestParam Integer firestation) {
+        //log.err <1
+        List<String> listPhoneNumberPersonsToAlert = personService.getPhoneByFirestation(firestation);
+        return listPhoneNumberPersonsToAlert;
+    }
+
+    @GetMapping("/firestation")
+    public List<Person> personsCoverByFirestation(@RequestParam Integer stationNumber) {
+
+        List<Person> listPersonsCoverBystation = personService.getPersonsCoverByFirestation(stationNumber);
+        return listPersonsCoverBystation;
+    }*/
 
 
 }

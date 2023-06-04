@@ -11,31 +11,31 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/medicalRecord")
 public class MedicalRecordController {
-    private final String urlEndpointMedicalRecord = "/medicalRecord";
 
     @Autowired
     private MedicalRecordService medicalRecordService;
 
-    @GetMapping(value = urlEndpointMedicalRecord)
+    @GetMapping()
     public List<MedicalRecord> listMedicalRecords() throws IOException {
         List<MedicalRecord> listMedicalRecords = medicalRecordService.getAllMedicalRecords();
         return listMedicalRecords;
     }
 
-    @PostMapping(value = urlEndpointMedicalRecord)
+    @PostMapping()
     public ResponseEntity<MedicalRecord> createMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
         medicalRecordService.createMedicalRecord(medicalRecord);
         return new ResponseEntity<>(medicalRecord, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = urlEndpointMedicalRecord)
+    @PutMapping()
     public ResponseEntity<MedicalRecord> updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
         medicalRecordService.updateMedicalRecord(medicalRecord);
         return new ResponseEntity<>(medicalRecord, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = urlEndpointMedicalRecord)
+    @DeleteMapping()
     public ResponseEntity<HttpStatus> deleteMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
         medicalRecordService.deleteMedicalRecord(medicalRecord);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);

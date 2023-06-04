@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+//Todo: javadoc
 @Service
 public class PersonRepositoryImpl implements PersonRepository {
 
@@ -70,12 +71,3 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
 }
-
-/*
-    try {
-            } catch (Exception e) {
-            throw new NotFoundException(Person.class, id);
-             throw new PersonNotFoundException(entity.getFirstName(), entity.getLastName());
-        }
-
- */
