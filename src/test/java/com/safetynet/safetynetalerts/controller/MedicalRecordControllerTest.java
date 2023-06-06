@@ -1,9 +1,7 @@
 package com.safetynet.safetynetalerts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.safetynetalerts.business.MedicalRecordService;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

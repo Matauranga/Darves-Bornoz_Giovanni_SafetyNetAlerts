@@ -42,8 +42,8 @@ public class MedicalRecord implements Entity<MedicalRecord> {
             return -1;
         }
         LocalDate birthDay = LocalDate.parse(birthdate, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-        logger.info(birthDay);
-        logger.info(birthdate);
+        //logger.info(birthDay);
+        //logger.info(birthdate);
 
         return Period.between(birthDay, LocalDate.now()).getYears();
 

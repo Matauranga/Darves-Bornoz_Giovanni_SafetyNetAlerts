@@ -4,25 +4,29 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MedicalRecordServiceTest {
+class PersonServiceImplTest {
 
     @Test
-    void getAllMedicalRecords() {
+    void getPersonById() {
     }
 
     @Test
-    void getMedicalRecordById() {
+    void getAllPersons() {
     }
 
     @Test
-    void createMedicalRecord() {
+    void createPerson() {
     }
 
     @Test
-    void updateMedicalRecord() {
+    void updatePerson() {
     }
 
     @Test
-    void deleteMedicalRecord() {
+    void deletePerson() {
+    }
+
+    @Test
+    void getChildByAddress() {
     }
 }

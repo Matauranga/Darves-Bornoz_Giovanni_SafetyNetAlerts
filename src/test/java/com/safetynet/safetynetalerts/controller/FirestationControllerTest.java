@@ -1,9 +1,7 @@
 package com.safetynet.safetynetalerts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.safetynetalerts.business.FirestationService;
 import com.safetynet.safetynetalerts.model.Firestation;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +26,7 @@ public class FirestationControllerTest {
     @Test
     @DisplayName("Test de la methode GET")
     public void getListFirestationTest() throws Exception {
-        mockMvc.perform(get(urlEndpointFirestation))
+        mockMvc.perform(get("/allfirestation"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("1509 Culver St")))
                 .andExpect(content().string(containsString("947 E. Rose Dr")));
