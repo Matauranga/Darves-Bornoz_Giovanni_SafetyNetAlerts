@@ -1,7 +1,6 @@
 package com.safetynet.safetynetalerts.repository;
 
 import com.safetynet.safetynetalerts.exceptions.NotFoundException;
-import com.safetynet.safetynetalerts.exceptions.PersonNotFoundException;
 import com.safetynet.safetynetalerts.model.Person;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +14,7 @@ import java.util.Optional;
 @Service
 public class PersonRepositoryImpl implements PersonRepository {
 
-    private static final Logger logger = LogManager.getLogger("SafetyNet Alerts");
+    private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
 
     @Autowired
     DataStorage dataStorage;
@@ -38,7 +37,7 @@ public class PersonRepositoryImpl implements PersonRepository {
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
         if (person.isEmpty()) {
-            logger.error("Person not found", new NotFoundException(Person.class, id));
+            log.error("Person not found", new NotFoundException(Person.class, id));
         }
         return person;
     }
@@ -66,7 +65,7 @@ public class PersonRepositoryImpl implements PersonRepository {
         if (personToDelete != null) {
             dataStorage.getPersons().remove(personToDelete);
         } else {
-            logger.error("Person not found", new NotFoundException(Person.class, id));
+            log.error("Person not found", new NotFoundException(Person.class, id));
         }
     }
 

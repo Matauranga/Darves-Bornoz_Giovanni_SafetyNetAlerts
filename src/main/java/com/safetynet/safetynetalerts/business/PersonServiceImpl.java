@@ -2,13 +2,13 @@ package com.safetynet.safetynetalerts.business;
 
 import com.safetynet.safetynetalerts.DTO.ChildDTO;
 import com.safetynet.safetynetalerts.DTO.InfosPersonDTO;
-import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.exceptions.PersonNotFoundException;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.repository.FirestationRepository;
 import com.safetynet.safetynetalerts.repository.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repository.PersonRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class PersonServiceImpl implements PersonService {
-    private static final Logger logger = LogManager.getLogger("SafetyNet Alerts");
+    private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @Autowired
     PersonRepository personRepository;
     @Autowired
@@ -99,8 +100,29 @@ public class PersonServiceImpl implements PersonService {
      * @param address where is the alert
      * @return child list's present, their age and who lives with them
      */
-    //TODO : les resultats sont bon mais la mise en page beurk !
+    //TODO : Peut le faire avec du stream?
     public List<ChildDTO> getChildByAddress(String address) {
+        //log.info
+      /*  List<Person> listPersonsAtTheAddress = getPersonsAtAddress(address);
+
+        return listPersonsAtTheAddress.stream()
+                .map(person -> {
+                            final MedicalRecord medicalRecord = medicalRecordRepository.getById(person.getId()).orElseThrow();
+                            List<String> personWhithChild = new ArrayList<>();
+                            if (medicalRecord.getAge() < 19) {
+                                for (Person adult : listPersonsAtTheAddress) {
+                                    if (!adult.getId().equals(person.getId())) {
+                                        personWhithChild.add(adult.getId());
+                                    }
+                                }
+                                return new ChildDTO(person, medicalRecord, personWhithChild);
+                            }
+                            return null;
+                        }
+                )
+                .toList();
+
+*/
         //log.info
         List<ChildDTO> childAtAddress = new ArrayList<>();
         List<Person> listPersonsAtTheAddress = getPersonsAtAddress(address);
@@ -110,12 +132,12 @@ public class PersonServiceImpl implements PersonService {
             MedicalRecord medicalRecordPerson = medicalRecordService.getMedicalRecordById(personAtTheAddress.getId());
             if (medicalRecordPerson.getAge() < 19) {
                 List<String> personWhithChild = new ArrayList<>();
-                ChildDTO child = new ChildDTO(personAtTheAddress.getFirstName(), personAtTheAddress.getLastName(), medicalRecordPerson.getAge(), personWhithChild);
                 for (Person otherPersons : listPersonsAtTheAddress) {
                     if (otherPersons != personAtTheAddress) {
                         personWhithChild.add(otherPersons.getId());
                     }
                 }
+                ChildDTO child = new ChildDTO(personAtTheAddress, medicalRecordPerson, personWhithChild);
                 childAtAddress.add(child);
             }
         }
@@ -143,45 +165,28 @@ public class PersonServiceImpl implements PersonService {
      * @param lastName
      * @return
      */
-    public InfosPersonDTO getInfosPersonByID(String firstName, String lastName) {
-        logger.debug("Entry in personInfosByID");
+    public List<InfosPersonDTO> getInfosPersonByID(String lastName, String firstName) {
 
-        List<Person> famillyMember = personRepository.getAll()
-                .stream()
-                .filter(p -> p.getLastName().equals(lastName))
-                .collect(Collectors.toList());
-        logger.debug("Succes to collect all familly members");
-
-        List<String> familyMemberStringList = new ArrayList<>();
-
-        for (Person person : famillyMember) {
-            if (!person.getFirstName().equals(firstName)) {
-                familyMemberStringList.add(person.getId());
-            }
+        if (StringUtils.isBlank(lastName)) {
+            throw new IllegalArgumentException("LastName can't be null, empty or blank");
         }
-        logger.debug("Succes to collect ID familly members");
+        //Pour avoir soit une personne retournée, soit toute la famille en fonction des paramètres donnée en entrée
+        Predicate<Person> predicate = p -> p.getLastName().equals(lastName);
+        if (StringUtils.isNotBlank(firstName)) {
+            predicate = predicate.and(p -> p.getFirstName().equals(firstName));
+        }
 
-        Person personSearch = personRepository.getAll()
+        List<Person> persons = personRepository.getAll()
                 .stream()
-                .filter(p -> p.getFirstName().equals(firstName))
-                .filter(p -> p.getLastName().equals(lastName))
-                .findFirst()
-                .orElseThrow(() -> new PersonNotFoundException(firstName, lastName));
+                .filter(predicate)
+                .toList();
 
-        logger.debug("Succes to collect Object person search");
-
-        MedicalRecord medicalRecordPersonSearch = medicalRecordService.getMedicalRecordById(personSearch.getId());
-
-        logger.debug("Succes to collect person search medical record");
-
-        InfosPersonDTO personDTO = new InfosPersonDTO(personSearch.getLastName(),
-                medicalRecordPersonSearch.getAge(), personSearch.getPhone(),
-                personSearch.getEmail(), medicalRecordPersonSearch.getMedications(),
-                medicalRecordPersonSearch.getAllergies(), familyMemberStringList);
-
-        logger.debug("Succes to collect all infos to return");
-
-        return personDTO;
+        return persons
+                .stream()
+                .map(person -> {
+                    final MedicalRecord medicalRecord = medicalRecordRepository.getById(person.getId()).orElseThrow();
+                    return new InfosPersonDTO(person, medicalRecord);
+                })
+                .toList();
     }
-
 }

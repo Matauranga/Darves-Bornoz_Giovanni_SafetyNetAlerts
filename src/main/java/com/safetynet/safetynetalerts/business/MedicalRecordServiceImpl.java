@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalerts.business;
 
 import com.safetynet.safetynetalerts.exceptions.MedicalRecordNotFoundException;
+import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.repository.DataStorage;
 import com.safetynet.safetynetalerts.repository.MedicalRecordRepository;
@@ -37,7 +38,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
         return medicalRecords
                 .stream()
                 .filter(medicalRecord -> id.equals(medicalRecord.getId()))
-                .findFirst().orElse(null);
+                .findFirst().orElseThrow(() -> new NotFoundException(MedicalRecord.class, id));
     }
 
     /**

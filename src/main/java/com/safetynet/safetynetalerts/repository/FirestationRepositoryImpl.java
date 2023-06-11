@@ -13,7 +13,7 @@ import java.util.Optional;
 //Todo: javadoc
 @Service
 public class FirestationRepositoryImpl implements FirestationRepository {
-    private static final Logger logger = LogManager.getLogger("SafetyNet Alerts");
+    private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @Autowired
     DataStorage dataStorage;
 
@@ -28,7 +28,7 @@ public class FirestationRepositoryImpl implements FirestationRepository {
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
         if (firestation.isEmpty()) {
-            logger.info("Firestation doesn't exist");
+            log.info("Firestation doesn't exist");
         }
         return firestation;
     }
@@ -48,7 +48,7 @@ public class FirestationRepositoryImpl implements FirestationRepository {
         return entity;
     }
 
-    //Todo : return infos sur le delete (code derr ou de réussite)?
+    //TODO : return infos sur le delete (code d'erreur ou de réussite)?
     @Override
     public void delete(String id) {
         Firestation firestationToDelete = dataStorage.getFirestations()
@@ -58,7 +58,7 @@ public class FirestationRepositoryImpl implements FirestationRepository {
         if (firestationToDelete != null) {
             dataStorage.getFirestations().remove(firestationToDelete);
         } else {
-            logger.error("Firestation not found", new NotFoundException(Firestation.class, id));
+            log.error("Firestation not found", new NotFoundException(Firestation.class, id));
         }
     }
 

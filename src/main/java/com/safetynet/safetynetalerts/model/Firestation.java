@@ -14,8 +14,8 @@ public class Firestation implements Entity<Firestation> {
     private Integer station;
 
     public String getId() {
-        return address; // String.valueOf(station);
-    }//valeur de la station ou de l'address ?
+        return address;
+    }
 
     @Override
     public Firestation update(Firestation update) {

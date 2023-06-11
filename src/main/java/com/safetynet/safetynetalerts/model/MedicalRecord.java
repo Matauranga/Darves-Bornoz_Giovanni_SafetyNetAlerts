@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MedicalRecord implements Entity<MedicalRecord> {
-    private static final Logger logger = LogManager.getLogger("SafetyNet Alerts");
+    private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @NotBlank(message = "firstName can not be null, empty or blank")
     private String firstName;
     @NotBlank(message = "lastName can not be null, empty or blank")
@@ -42,11 +42,7 @@ public class MedicalRecord implements Entity<MedicalRecord> {
             return -1;
         }
         LocalDate birthDay = LocalDate.parse(birthdate, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-        //logger.info(birthDay);
-        //logger.info(birthdate);
-
         return Period.between(birthDay, LocalDate.now()).getYears();
-
     }
 
 }

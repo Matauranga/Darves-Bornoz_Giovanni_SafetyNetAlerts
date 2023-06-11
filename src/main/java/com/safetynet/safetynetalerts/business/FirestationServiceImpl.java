@@ -1,18 +1,23 @@
 package com.safetynet.safetynetalerts.business;
 
-import com.safetynet.safetynetalerts.DTO.*;
+import com.safetynet.safetynetalerts.DTO.CountAdultChildByFirestationWithInfosPersonDTO;
+import com.safetynet.safetynetalerts.DTO.InfosPersonByFirestationDTO;
+import com.safetynet.safetynetalerts.DTO.InfosPersonLivingAtAddressDTO;
+import com.safetynet.safetynetalerts.DTO.InfosPersonsLivingAtAddressAndFirestationToCallDTO;
 import com.safetynet.safetynetalerts.exceptions.FirestationNotFoundException;
 import com.safetynet.safetynetalerts.model.Firestation;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.repository.FirestationRepository;
+import com.safetynet.safetynetalerts.repository.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  *
@@ -23,6 +28,8 @@ public class FirestationServiceImpl implements FirestationService {
     FirestationRepository firestationRepository;
     @Autowired
     PersonRepository personRepository;
+    @Autowired
+    MedicalRecordRepository medicalRecordRepository;
     @Autowired
     MedicalRecordService medicalRecordService;
 
@@ -36,7 +43,7 @@ public class FirestationServiceImpl implements FirestationService {
     /**
      * @param firestation to create
      */
-    public void createFirstation(Firestation firestation) {
+    public void createFirestation(Firestation firestation) {
 
         firestationRepository.saveOrUpdate(firestation);
     }
@@ -76,13 +83,13 @@ public class FirestationServiceImpl implements FirestationService {
         List<Firestation> addressServedByFirestation = firestationRepository.getAll()
                 .stream()
                 .filter(p -> p.getStation().equals(firestationNumber))
-                .collect(Collectors.toList());
+                .toList();
         //log.debug
         for (Firestation firestation : addressServedByFirestation) {
             listPersonsCoverByStation.addAll(personRepository.getAll()
                     .stream()
                     .filter(p -> p.getAddress().equals(firestation.getAddress()))
-                    .collect(Collectors.toList()));
+                    .toList());
         }
 
 
@@ -122,18 +129,16 @@ public class FirestationServiceImpl implements FirestationService {
                     = new InfosPersonByFirestationDTO(person.getFirstName(), person.getLastName(), person.getAddress(), person.getPhone());
             infosPersonsByFirestationList.add(infosPersonByFirestationDTO);
         }
-        CountAdultChildByFirestationWithInfosPersonDTO infosPersonsAndcountAdultChildCoverByFirestation = new CountAdultChildByFirestationWithInfosPersonDTO(adultNumber, childNumber, infosPersonsByFirestationList);
 
-        return infosPersonsAndcountAdultChildCoverByFirestation;
+        return new CountAdultChildByFirestationWithInfosPersonDTO(adultNumber, childNumber, infosPersonsByFirestationList);
     }
 
     /**
      * @param address
      * @return
      */
-    public ListInfosPersonsLivingAtAddressAndFirestationToCallDTO getInfosPersonsLivingAtAddressAndFirestationToCall(String address) {
+    public InfosPersonsLivingAtAddressAndFirestationToCallDTO getInfosPersonsLivingAtAddressAndFirestationToCall(String address) {
 
-        List<InfosPersonLivingAtAddressDTO> listInfosPersonLivingAtAddressDTOS = new ArrayList<>();
         Integer firestationToCall = firestationRepository.getAll()
                 .stream()
                 .filter(p -> p.getId().equals(address))
@@ -141,49 +146,40 @@ public class FirestationServiceImpl implements FirestationService {
                 .orElseThrow(() -> new FirestationNotFoundException(address))
                 .getStation();
 
-        List<Person> listPersonsLivingAtAddress = personRepository.getAll()
+        List<InfosPersonLivingAtAddressDTO> listPersonsLivingAtAddress = personRepository.getAll()
                 .stream()
                 .filter(p -> p.getAddress().equals(address))
-                .collect(Collectors.toList());
+                .map(person -> {
+                    final MedicalRecord medicalRecord = medicalRecordRepository.getById(person.getId()).orElseThrow();
+                    return new InfosPersonLivingAtAddressDTO(person, medicalRecord);
+                })
+                .toList();
 
-        for (Person person : listPersonsLivingAtAddress) {
-            MedicalRecord medicalRecordPerson = medicalRecordService.getMedicalRecordById(person.getId());
-            InfosPersonLivingAtAddressDTO infosPersonLivingAtAddressDTO = new InfosPersonLivingAtAddressDTO(person.getLastName(), person.getPhone(),
-                    medicalRecordPerson.getAge(), medicalRecordPerson.getMedications(), medicalRecordPerson.getAllergies());
-            listInfosPersonLivingAtAddressDTOS.add(infosPersonLivingAtAddressDTO);
-        }
-
-        ListInfosPersonsLivingAtAddressAndFirestationToCallDTO listInfosPersonsLivingAtAddressAndFirestationToCallDTO = new ListInfosPersonsLivingAtAddressAndFirestationToCallDTO(firestationToCall, listInfosPersonLivingAtAddressDTOS);
-        return listInfosPersonsLivingAtAddressAndFirestationToCallDTO;
+        return new InfosPersonsLivingAtAddressAndFirestationToCallDTO(firestationToCall, listPersonsLivingAtAddress);
     }
 
     /**
-     * @param station
+     * @param stations
      * @return
      */
-    public HouseholdListDTO getHouseholdServedByFirestation(Integer station) {
+    public List<InfosPersonLivingAtAddressDTO> getHouseholdServedByFirestation(Set<Integer> stations) {
 
-        List<InfosPersonLivingAtAddressDTO> listInfosPersonLivingAtAddressDTOS = new ArrayList<>();
-
-        List<Firestation> householdServedByfirestation = firestationRepository.getAll()
+        List<String> firestationAddresses = firestationRepository.getAll()
                 .stream()
-                .filter(p -> p.getStation().equals(station))
-                .collect(Collectors.toList());
+                .filter(p -> stations.contains(p.getStation()))
+                .map(Firestation::getAddress)
+                .toList();
 
-        for (Firestation firestation : householdServedByfirestation) {
-            List<Person> listPersonsLivingAtAddress = personRepository.getAll()
-                    .stream()
-                    .filter(p -> p.getAddress().equals(firestation.getAddress()))
-                    .collect(Collectors.toList());
+        List<InfosPersonLivingAtAddressDTO> infosPersonLivingAtAddressDTO = personRepository.getAll()
+                .stream()
+                .filter(p -> firestationAddresses.contains(p.getAddress()))
+                .map(person -> {
+                    var medicalRecord = medicalRecordService.getMedicalRecordById(person.getId());
+                    //final MedicalRecord medicalRecord = medicalRecordRepository.getById(person.getId()).orElseThrow();//TODO : diff avec plus haut ?
+                    return new InfosPersonLivingAtAddressDTO(person, medicalRecord);
+                })
+                .toList();
 
-            for (Person person : listPersonsLivingAtAddress) {
-                MedicalRecord medicalRecordPerson = medicalRecordService.getMedicalRecordById(person.getId());
-                InfosPersonLivingAtAddressDTO infosPersonLivingAtAddressDTO = new InfosPersonLivingAtAddressDTO(person.getLastName(), person.getPhone(),
-                        medicalRecordPerson.getAge(), medicalRecordPerson.getMedications(), medicalRecordPerson.getAllergies());
-                listInfosPersonLivingAtAddressDTOS.add(infosPersonLivingAtAddressDTO);
-            }
-        }
-        HouseholdListDTO householdListDTO = new HouseholdListDTO(listInfosPersonLivingAtAddressDTOS);
-        return householdListDTO;
+        return infosPersonLivingAtAddressDTO.stream().sorted(Comparator.comparing(InfosPersonLivingAtAddressDTO::getAddress)).toList();
     }
 }

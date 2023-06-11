@@ -13,7 +13,7 @@ import java.util.Optional;
 //Todo: javadoc
 @Service
 public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
-    private static final Logger logger = LogManager.getLogger("SafetyNet Alerts");
+    private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @Autowired
     DataStorage dataStorage;
 
@@ -28,7 +28,7 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
         if (medicalRecord.isEmpty()) {
-            logger.error("Medical record not found", new NotFoundException(MedicalRecord.class, id));
+            log.error("Medical record not found", new NotFoundException(MedicalRecord.class, id));
         }
         return medicalRecord;
     }
@@ -58,7 +58,7 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
         if (medicalRecordToDelete != null) {
             dataStorage.getMedicalRecords().remove(medicalRecordToDelete);
         } else {
-            logger.error("Medical record not found", new NotFoundException(MedicalRecord.class, id));
+            log.error("Medical record not found", new NotFoundException(MedicalRecord.class, id));
         }
     }
 }
