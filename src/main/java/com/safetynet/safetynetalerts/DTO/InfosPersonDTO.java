@@ -1,5 +1,7 @@
 package com.safetynet.safetynetalerts.DTO;
 
+import com.safetynet.safetynetalerts.model.MedicalRecord;
+import com.safetynet.safetynetalerts.model.Person;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,13 +12,22 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InfosPersonDTO {
-    //private String firstName;
+    private String firstName;
     private String lastName;
+    private String address;
     private Integer age;
-    private String phone;
     private String email;
     private List<String> medications;
     private List<String> allergies;
-    private List<String> familyMember;
+
+    public InfosPersonDTO(Person person, MedicalRecord medicalRecord) {
+        this.firstName = person.getFirstName();
+        this.lastName = person.getLastName();
+        this.address = person.getAddress() + ", " + person.getZip() + ", " + person.getCity();
+        this.age = medicalRecord.getAge();
+        this.email = person.getEmail();
+        this.medications = medicalRecord.getMedications();
+        this.allergies = medicalRecord.getAllergies();
+    }
 
 }

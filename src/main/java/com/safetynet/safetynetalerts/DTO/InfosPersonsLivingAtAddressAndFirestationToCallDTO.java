@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListInfosPersonsLivingAtAddressAndFirestationToCallDTO {
+public class InfosPersonsLivingAtAddressAndFirestationToCallDTO {
     private Integer firestationToCall;
-    private List<InfosPersonLivingAtAddressDTO> listPersonLivingAtAddress;
+    private List<InfosPersonLivingAtAddressDTO> PersonsLivingAtAddress;
 
 }
