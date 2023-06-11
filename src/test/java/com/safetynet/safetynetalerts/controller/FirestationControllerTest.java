@@ -102,14 +102,6 @@ public class FirestationControllerTest {
                 .andExpect(content().string(containsString("908 73rd St")))
                 .andExpect(content().string(containsString("841-874-7784")));
 
-
-       /* mockMvc.perform(get("/childAlert?address=1509 Culver St"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Tenley")))
-                .andExpect(content().string(containsString("1509 Culver St")))
-                .andExpect(content().string(containsString("11")));*/
-
-
     }
 
     @Test

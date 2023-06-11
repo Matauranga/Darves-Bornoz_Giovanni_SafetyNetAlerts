@@ -49,18 +49,18 @@ public class FirestationServiceImpl implements FirestationService {
     }
 
     /**
-     * @param updateFirestation
+     * @param newValueOfFirestation
      */
-    public void updateFirestation(Firestation updateFirestation) {
+    public void updateFirestation(Firestation newValueOfFirestation) {
 
         Firestation firestation = firestationRepository.getAll()
                 .stream()
-                .filter(p -> updateFirestation.getId().equals(p.getId()))
+                .filter(p -> newValueOfFirestation.getId().equals(p.getId()))
                 .findFirst()
-                .orElseThrow(() -> new FirestationNotFoundException(updateFirestation.getId()))
-                .update(updateFirestation);
+                .orElseThrow(() -> new FirestationNotFoundException(newValueOfFirestation.getId()))
+                .update(newValueOfFirestation);
 
-        firestationRepository.saveOrUpdate(updateFirestation);
+        firestationRepository.saveOrUpdate(newValueOfFirestation);
     }
 
     /**
@@ -120,6 +120,7 @@ public class FirestationServiceImpl implements FirestationService {
 
         for (Person person : listPersonsCoverByStation) {
             MedicalRecord medicalRecordPerson = medicalRecordService.getMedicalRecordById(person.getId());
+            //MedicalRecord medicalRecordPerson = medicalRecordRepository.getById(person.getId()).orElseThrow();
             if (medicalRecordPerson.getAge() < 19) {
                 childNumber++;
             } else {
@@ -150,7 +151,8 @@ public class FirestationServiceImpl implements FirestationService {
                 .stream()
                 .filter(p -> p.getAddress().equals(address))
                 .map(person -> {
-                    final MedicalRecord medicalRecord = medicalRecordRepository.getById(person.getId()).orElseThrow();
+                    //final MedicalRecord medicalRecord = medicalRecordRepository.getById(person.getId()).orElseThrow();
+                    MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordById(person.getId());
                     return new InfosPersonLivingAtAddressDTO(person, medicalRecord);
                 })
                 .toList();
