@@ -31,6 +31,8 @@ public class FirestationControllerTest {
                 .andExpect(content().string(containsString("1509 Culver St")))
                 .andExpect(content().string(containsString("947 E. Rose Dr")));
 
+
+
     }
 
     @Test
@@ -51,14 +53,14 @@ public class FirestationControllerTest {
     @Test
     @DisplayName("Test de la methode PUT")
     public void updateFirestationTest() throws Exception {
-        Firestation firestationToUpdateTest = new Firestation("1509 Culver St", 10);
+        Firestation firestationToUpdateTest = new Firestation("947 E. Rose Dr", 10);
 
         mockMvc.perform(put(urlEndpointFirestation)
                         .content(new ObjectMapper().writeValueAsString(firestationToUpdateTest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.address").value("1509 Culver St"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.address").value("947 E. Rose Dr"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.station").value(10));
 
 
@@ -77,5 +79,58 @@ public class FirestationControllerTest {
 
     }
 
+    @Test
+    @DisplayName("test de phone alert")
+    void phoneAlertByFirestationNumberTest() throws Exception {
+        mockMvc.perform(get("/phoneAlert?firestation=1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("841-874-6512")))
+                .andExpect(content().string(containsString("841-874-7462")))
+                .andExpect(content().string(containsString("841-874-7784")));
 
+    }
+
+    @Test
+    @DisplayName("test de personsCoverByFirestation ")
+    void personsCoverByFirestationTest() throws Exception {
+
+        mockMvc.perform(get("/firestation?stationNumber=1"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.adultNumber").value("5"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.childNumber").value("1"))
+                .andExpect(content().string(containsString("Peter")))
+                .andExpect(content().string(containsString("908 73rd St")))
+                .andExpect(content().string(containsString("841-874-7784")));
+
+
+       /* mockMvc.perform(get("/childAlert?address=1509 Culver St"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Tenley")))
+                .andExpect(content().string(containsString("1509 Culver St")))
+                .andExpect(content().string(containsString("11")));*/
+
+
+    }
+
+    @Test
+    @DisplayName("test de fire alert")
+    void fireAlertAtAddressTest() throws Exception {
+        mockMvc.perform(get("/fire?address=1509 Culver St"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firestationToCall").value("3"))
+                .andExpect(content().string(containsString("aznol:350mg")))
+                .andExpect(content().string(containsString("Felicia")));
+
+
+    }
+
+    @Test
+    @DisplayName("test de flood alert")
+    void floodAlertTest() throws Exception {
+        mockMvc.perform(get("/flood/stations?stations=1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("shellfish")))
+                .andExpect(content().string(containsString("Shawna")))
+                .andExpect(content().string(containsString("841-874-7784")));
+    }
 }
