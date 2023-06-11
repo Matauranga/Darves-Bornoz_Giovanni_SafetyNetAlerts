@@ -11,11 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -79,6 +78,53 @@ public class PersonControllerTest {
                 .andExpect(status().isAccepted());
 
     }
+
+
+    @Test
+    @DisplayName("test de childAlertByAddress ")
+    void childAlertByAddress() throws Exception {
+
+        mockMvc.perform(get("/childAlert?address=1509 Culver St"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Tenley")))
+                .andExpect(content().string(containsString("1509 Culver St")))
+                .andExpect(content().string(containsString("11")));
+
+
+    }
+
+    @Test
+    @DisplayName("test de personInfosByID for specific firstname")
+    void personInfosByIDWithFirstNameTest() throws Exception {
+        mockMvc.perform(get("/personInfo?firstName=John&lastName=Boyd"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("John")))
+                .andExpect(content().string(containsString("aznol:350mg")));
+
+    }
+
+    @Test
+    @DisplayName("test de personInfosByID without firstname")
+    void personInfosByIDWithoutFirstNameTest() throws Exception {
+        mockMvc.perform(get("/personInfo?lastName=Boyd"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Jacob")))
+                .andExpect(content().string(containsString("tenz@email.com")))
+                .andExpect(content().string(containsString("37")));
+
+    }
+
+
+    @Test
+    @DisplayName("test de flood alert")
+    void emailByCityTest() throws Exception {
+        mockMvc.perform(get("/communityEmail?city=Culver"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("jaboyd@email.com")))
+                .andExpect(content().string(containsString("soph@email.com")))
+                .andExpect(content().string(containsString("gramps@email.com")));
+    }
+
 
 }
 
