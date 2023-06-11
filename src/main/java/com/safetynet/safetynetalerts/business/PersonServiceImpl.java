@@ -180,7 +180,8 @@ public class PersonServiceImpl implements PersonService {
         return persons
                 .stream()
                 .map(person -> {
-                    final MedicalRecord medicalRecord = medicalRecordRepository.getById(person.getId()).orElseThrow();
+                    //final MedicalRecord medicalRecord = medicalRecordRepository.getById(person.getId()).orElseThrow();
+                    MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordById(person.getId());
                     return new InfosPersonDTO(person, medicalRecord);
                 })
                 .toList();

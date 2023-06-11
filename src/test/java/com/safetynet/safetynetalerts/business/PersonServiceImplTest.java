@@ -1,5 +1,9 @@
 package com.safetynet.safetynetalerts.business;
 
+import com.safetynet.safetynetalerts.DTO.ChildDTO;
+import com.safetynet.safetynetalerts.DTO.InfosPersonDTO;
+import com.safetynet.safetynetalerts.model.Firestation;
+import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.repository.DataStorage;
 import com.safetynet.safetynetalerts.repository.FirestationRepository;
@@ -14,10 +18,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.util.Lists.list;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -38,7 +44,52 @@ class PersonServiceImplTest {
     @Mock
     MedicalRecordService medicalRecordService;
 
-    //TODO : test optional
+    private List<Person> initListPersons() {
+        List<Person> persons = new ArrayList<>();
+        Person person1 = new Person("Gio", "gio", "123 Mayol", "Toulon", "101010", "000-111-2222", "rougeetnoir@email.com");
+        //child
+        Person person2 = new Person("AGio", "gio", "123 Mayol", "Toulon", "101010", "000-111-3333", "noiretrouge@email.com");
+        Person person3 = new Person("BGio", "gio", "123 Mayol", "Toulon", "101010", "000-111-4444", "redandblack@email.com");
+        Collections.addAll(persons, person1, person2, person3);
+
+        when(personRepository.getAll()).thenReturn(persons);
+
+        return persons;
+    }
+
+    private List<MedicalRecord> initListMedicalRecords() {
+        List<MedicalRecord> medicalRecords = new ArrayList<>();
+        MedicalRecord medicalRecord1 = new MedicalRecord("Gio", "gio", "01/01/2000", list("propane:NoLimit"), list("ethanol"));
+        MedicalRecord medicalRecord2 = new MedicalRecord("AGio", "gio", "01/01/2020", list("buthane:forSmile"), list("bioethanol"));
+        MedicalRecord medicalRecord3 = new MedicalRecord("BGio", "gio", "01/01/1999", list("uranium:toDie"), list("methanol"));
+        Collections.addAll(medicalRecords, medicalRecord1, medicalRecord2, medicalRecord3);
+
+        when(medicalRecordRepository.getAll()).thenReturn(medicalRecords);
+
+        return medicalRecords;
+
+    }
+
+    private List<Firestation> initListFirestations() {
+        List<Firestation> firestations = new ArrayList<>();
+        Firestation firestation = new Firestation("123 Mayol", 45);
+        firestations.add(firestation);
+
+        when(firestationRepository.getAll()).thenReturn(firestations);
+
+        return firestations;
+    }
+
+    private void initExistingPersonsMedicalRecordsAndFirestation() {
+
+        List<Person> persons = initListPersons();
+        List<MedicalRecord> medicalRecords = initListMedicalRecords();
+        List<Firestation> firestations = initListFirestations();
+
+    }
+
+
+    //TODO : test sur optional
     @Disabled
     @Test
     @DisplayName("test de getPersonById")
@@ -124,10 +175,14 @@ class PersonServiceImplTest {
     @DisplayName("test de getPersonsAtAddress")
     void getPersonsAtAddressTest() {
         //Given
+        initListPersons();
 
         //When
+        List<Person> response = personServiceImpl.getPersonsAtAddress("123 Mayol");
 
         //Then
+        verify(personRepository, times(1)).getAll();
+        assertThat(response).isNotEmpty();
 
     }
 
@@ -135,10 +190,18 @@ class PersonServiceImplTest {
     @DisplayName("test de getChildByAddress")
     void getChildByAddressTest() {
         //Given
+        List<Person> persons = initListPersons();
+        List<MedicalRecord> medicalRecords = initListMedicalRecords();
+        initExistingPersonsMedicalRecordsAndFirestation();
 
         //When
+        when(medicalRecordService.getMedicalRecordById(persons.get(0).getId())).thenReturn(medicalRecords.get(0));
+        when(medicalRecordService.getMedicalRecordById(persons.get(1).getId())).thenReturn(medicalRecords.get(1));
+        when(medicalRecordService.getMedicalRecordById(persons.get(2).getId())).thenReturn(medicalRecords.get(2));
+        List<ChildDTO> response = personServiceImpl.getChildByAddress("123 Mayol");
 
         //Then
+        assertThat(response).isNotEmpty();
 
     }
 
@@ -146,21 +209,49 @@ class PersonServiceImplTest {
     @DisplayName("test de getEmailByCity")
     void getEmailByCityTest() {
         //Given
+        initListPersons();
 
         //When
+        List<String> response = personServiceImpl.getEmailByCity("Toulon");
 
         //Then
+        assertThat(response).contains("redandblack@email.com", "rougeetnoir@email.com", "noiretrouge@email.com");
 
     }
 
     @Test
-    @DisplayName("test de getInfosPersonByID")
-    void getInfosPersonByIDTest() {
+    @DisplayName("test de getInfosPersonByID without first name")
+    void getInfosPersonByIDWithoutFirstNameTest() {
         //Given
+        List<Person> persons = initListPersons();
+        List<MedicalRecord> medicalRecords = initListMedicalRecords();
+        initExistingPersonsMedicalRecordsAndFirestation();
 
         //When
+        when(medicalRecordService.getMedicalRecordById(persons.get(0).getId())).thenReturn(medicalRecords.get(0));
+        when(medicalRecordService.getMedicalRecordById(persons.get(1).getId())).thenReturn(medicalRecords.get(1));
+        when(medicalRecordService.getMedicalRecordById(persons.get(2).getId())).thenReturn(medicalRecords.get(2));
+        List<InfosPersonDTO> response = personServiceImpl.getInfosPersonByID("gio", null);
 
         //Then
+        assertThat(response.size()).isEqualTo(3);
+    }
 
+    @Test
+    @DisplayName("test de getInfosPersonByID with first name")
+    void getInfosPersonByIDWithFirstNameTest() {
+        //Given
+        List<Person> persons = initListPersons();
+        List<MedicalRecord> medicalRecords = initListMedicalRecords();
+        initExistingPersonsMedicalRecordsAndFirestation();
+
+        //When
+        when(medicalRecordService.getMedicalRecordById(persons.get(0).getId())).thenReturn(medicalRecords.get(0));
+        when(medicalRecordService.getMedicalRecordById(persons.get(1).getId())).thenReturn(medicalRecords.get(1));
+        when(medicalRecordService.getMedicalRecordById(persons.get(2).getId())).thenReturn(medicalRecords.get(2));
+        List<InfosPersonDTO> response = personServiceImpl.getInfosPersonByID("gio", "Gio");
+
+        //Then
+        assertThat(response.size()).isEqualTo(1);
     }
 }

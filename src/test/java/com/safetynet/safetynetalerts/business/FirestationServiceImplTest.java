@@ -41,10 +41,10 @@ class FirestationServiceImplTest {
 
     private List<Person> initListPersons() {
         List<Person> persons = new ArrayList<>();
-        Person person1 = new Person("Gio", "Ggio", "123 Mayol", "Toulon", "101010", "000-111-2222", "rougeetnoir@email.com");
+        Person person1 = new Person("Gio", "gio", "123 Mayol", "Toulon", "101010", "000-111-2222", "rougeetnoir@email.com");
         //child
-        Person person2 = new Person("Gio", "Agio", "123 Mayol", "Toulon", "101010", "000-111-3333", "noiretrouge@email.com");
-        Person person3 = new Person("Gio", "Bgio", "123 Mayol", "Toulon", "101010", "000-111-4444", "redandblack@email.com");
+        Person person2 = new Person("AGio", "gio", "123 Mayol", "Toulon", "101010", "000-111-3333", "noiretrouge@email.com");
+        Person person3 = new Person("BGio", "gio", "123 Mayol", "Toulon", "101010", "000-111-4444", "redandblack@email.com");
         Collections.addAll(persons, person1, person2, person3);
 
         when(personRepository.getAll()).thenReturn(persons);
@@ -54,9 +54,9 @@ class FirestationServiceImplTest {
 
     private List<MedicalRecord> initListMedicalRecords() {
         List<MedicalRecord> medicalRecords = new ArrayList<>();
-        MedicalRecord medicalRecord1 = new MedicalRecord("Gio", "Ggio", "01/01/2000", list("propane:NoLimit"), list("ethanol"));
-        MedicalRecord medicalRecord2 = new MedicalRecord("Gio", "Agio", "01/01/2020", list("buthane:forSmile"), list("bioethanol"));
-        MedicalRecord medicalRecord3 = new MedicalRecord("Gio", "Bgio", "01/01/1999", list("uranium:toDie"), list("methanol"));
+        MedicalRecord medicalRecord1 = new MedicalRecord("Gio", "gio", "01/01/2000", list("propane:NoLimit"), list("ethanol"));
+        MedicalRecord medicalRecord2 = new MedicalRecord("AGio", "gio", "01/01/2020", list("buthane:forSmile"), list("bioethanol"));
+        MedicalRecord medicalRecord3 = new MedicalRecord("BGio", "gio", "01/01/1999", list("uranium:toDie"), list("methanol"));
         Collections.addAll(medicalRecords, medicalRecord1, medicalRecord2, medicalRecord3);
 
         when(medicalRecordRepository.getAll()).thenReturn(medicalRecords);
@@ -164,7 +164,7 @@ class FirestationServiceImplTest {
     void getPersonsCoverByFirestationTest() {
         //Given
         initExistingPersonsMedicalRecordsAndFirestation();
-        Person expectedPerson = new Person("Gio", "Agio", "123 Mayol", "Toulon", "101010", "000-111-3333", "noiretrouge@email.com");
+        Person expectedPerson = new Person("AGio", "gio", "123 Mayol", "Toulon", "101010", "000-111-3333", "noiretrouge@email.com");
         //When
         List<Person> response = firestationServiceImpl.getPersonsCoverByFirestation(45);
 
@@ -180,7 +180,7 @@ class FirestationServiceImplTest {
     void getPhoneByFirestationTest() {
         //Given
         initExistingPersonsMedicalRecordsAndFirestation();
-        Person expectedPerson = new Person("Gio", "Agio", "123 Mayol", "Toulon", "101010", "000-111-3333", "noiretrouge@email.com");
+        Person expectedPerson = new Person("AGio", "gio", "123 Mayol", "Toulon", "101010", "000-111-3333", "noiretrouge@email.com");
 
         //When
         List<String> response = firestationServiceImpl.getPhoneByFirestation(45);
