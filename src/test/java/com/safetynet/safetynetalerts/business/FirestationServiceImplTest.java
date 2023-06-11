@@ -109,16 +109,16 @@ class FirestationServiceImplTest {
     }
 
     @Test
-    @DisplayName("test de updateFirestationTest")
+    @DisplayName("test de updateFirestation")
     void updateFirestationTest() {
         //Given
-        List<Firestation> response = new ArrayList<>();
+        List<Firestation> listFirestations = new ArrayList<>();
         Firestation firestationTest = new Firestation("999 Blv Michou", 99);
-        response.add(firestationTest);
+        listFirestations.add(firestationTest);
         Firestation newValueOfFirestationTest = new Firestation("999 Blv Michou", 100);
 
         //When
-        when(firestationRepository.getAll()).thenReturn(response);
+        when(firestationRepository.getAll()).thenReturn(listFirestations);
         firestationServiceImpl.updateFirestation(newValueOfFirestationTest);
 
         //Then
@@ -130,7 +130,7 @@ class FirestationServiceImplTest {
 
     @Disabled // TODO : possible de tester dans ce cas l'exception ?
     @Test
-    @DisplayName("test de updateFirestationTest")
+    @DisplayName("test de updateFirestation")
     void updateAFirestationNotExistingTest() {
         //Given
         List<Firestation> response = new ArrayList<>();
@@ -147,7 +147,7 @@ class FirestationServiceImplTest {
     }
 
     @Test
-    @DisplayName("test de deleteFirestationTest")
+    @DisplayName("test de deleteFirestation")
     void deleteFirestationTest() {
         //Given
         Firestation firestationTest = new Firestation("999 Blv Michou", 99);

@@ -5,7 +5,6 @@ import com.safetynet.safetynetalerts.DTO.InfosPersonDTO;
 import com.safetynet.safetynetalerts.exceptions.PersonNotFoundException;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
-import com.safetynet.safetynetalerts.repository.FirestationRepository;
 import com.safetynet.safetynetalerts.repository.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repository.PersonRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -33,8 +32,6 @@ public class PersonServiceImpl implements PersonService {
     MedicalRecordRepository medicalRecordRepository;
     @Autowired
     MedicalRecordService medicalRecordService;
-    @Autowired
-    FirestationRepository firestationRepository;
 
     /**
      * @param id of the person search
@@ -82,18 +79,17 @@ public class PersonServiceImpl implements PersonService {
     }
 
 /*
-    /********************************************   TODO: changer de place certaines fonctions  *******************************************************************************/
+    /********************************************   TODO : changer de place certaines fonctions  *******************************************************************************/
 
     /**
      * @param address
      * @return
      */
     public List<Person> getPersonsAtAddress(String address) {
-        List<Person> personListAtTheAddress = personRepository.getAll()
+        return personRepository.getAll()
                 .stream()
                 .filter(p -> p.getAddress().equals(address))
                 .collect(Collectors.toList());
-        return personListAtTheAddress;
     }
 
     /**
@@ -108,14 +104,14 @@ public class PersonServiceImpl implements PersonService {
         return listPersonsAtTheAddress.stream()
                 .map(person -> {
                             final MedicalRecord medicalRecord = medicalRecordRepository.getById(person.getId()).orElseThrow();
-                            List<String> personWhithChild = new ArrayList<>();
+                            List<String> personWithChild = new ArrayList<>();
                             if (medicalRecord.getAge() < 19) {
                                 for (Person adult : listPersonsAtTheAddress) {
                                     if (!adult.getId().equals(person.getId())) {
-                                        personWhithChild.add(adult.getId());
+                                        personWithChild.add(adult.getId());
                                     }
                                 }
-                                return new ChildDTO(person, medicalRecord, personWhithChild);
+                                return new ChildDTO(person, medicalRecord, personWithChild);
                             }
                             return null;
                         }
@@ -131,13 +127,13 @@ public class PersonServiceImpl implements PersonService {
             //log.debug
             MedicalRecord medicalRecordPerson = medicalRecordService.getMedicalRecordById(personAtTheAddress.getId());
             if (medicalRecordPerson.getAge() < 19) {
-                List<String> personWhithChild = new ArrayList<>();
+                List<String> personWithChild = new ArrayList<>();
                 for (Person otherPersons : listPersonsAtTheAddress) {
                     if (otherPersons != personAtTheAddress) {
-                        personWhithChild.add(otherPersons.getId());
+                        personWithChild.add(otherPersons.getId());
                     }
                 }
-                ChildDTO child = new ChildDTO(personAtTheAddress, medicalRecordPerson, personWhithChild);
+                ChildDTO child = new ChildDTO(personAtTheAddress, medicalRecordPerson, personWithChild);
                 childAtAddress.add(child);
             }
         }
@@ -153,7 +149,7 @@ public class PersonServiceImpl implements PersonService {
         List<Person> personInCity = personRepository.getAll()
                 .stream()
                 .filter(p -> p.getCity().equals(city))
-                .collect(Collectors.toList());
+                .toList();
         for (Person person : personInCity) {
             emailPersonInCity.add(person.getEmail());
         }
