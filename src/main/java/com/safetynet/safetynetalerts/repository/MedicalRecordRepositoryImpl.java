@@ -38,11 +38,11 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
         var medicalRecordEntity = getById(entity.getId());
 
-        if(medicalRecordEntity.isPresent()){
-            int index =  dataStorage.getMedicalRecords().indexOf(medicalRecordEntity.get());
+        if (medicalRecordEntity.isPresent()) {
+            int index = dataStorage.getMedicalRecords().indexOf(medicalRecordEntity.get());
             dataStorage.getMedicalRecords()
                     .set(index, entity);
-        }else{
+        } else {
             dataStorage.getMedicalRecords().add(entity);
         }
 

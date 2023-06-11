@@ -39,6 +39,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
                 .stream()
                 .filter(medicalRecord -> id.equals(medicalRecord.getId()))
                 .findFirst().orElseThrow(() -> new NotFoundException(MedicalRecord.class, id));
+
     }
 
     /**

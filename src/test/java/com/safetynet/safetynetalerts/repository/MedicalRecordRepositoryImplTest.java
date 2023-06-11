@@ -139,6 +139,5 @@ public class MedicalRecordRepositoryImplTest {
         medicalRecordRepositoryImpl.delete(expectedMedicalRecord.getId());
         //THEN
         verify(dataStorage, times(1)).getMedicalRecords();
-
     }
 }
