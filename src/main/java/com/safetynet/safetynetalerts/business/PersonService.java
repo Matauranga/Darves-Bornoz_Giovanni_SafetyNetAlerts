@@ -20,5 +20,5 @@ public interface PersonService {
 
     List<String> getEmailByCity(String city);
 
-    InfosPersonDTO getInfosPersonByID(String firstName, String lastName);
+    List<InfosPersonDTO> getInfosPersonByID(String lastName, String firstName);
 }
