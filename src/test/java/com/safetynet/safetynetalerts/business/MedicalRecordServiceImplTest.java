@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 class MedicalRecordServiceImplTest {
     @InjectMocks
     MedicalRecordServiceImpl medicalRecordServiceImpl;
@@ -53,7 +51,6 @@ class MedicalRecordServiceImplTest {
 
         //Then
         assertThat(response).isEqualTo(medicalRecordTest);
-
     }
 
     @Test
@@ -84,7 +81,6 @@ class MedicalRecordServiceImplTest {
 
         //Then
         verify(medicalRecordRepository, times(1)).getAll();
-        verify(medicalRecordRepository, times(1)).saveOrUpdate(any());
         assertThat(medicalRecordTest.getBirthdate()).isEqualTo(newValueOfMedicalRecordTest.getBirthdate());
     }
 

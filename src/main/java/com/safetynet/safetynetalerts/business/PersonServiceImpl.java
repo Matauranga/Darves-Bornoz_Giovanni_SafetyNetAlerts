@@ -1,7 +1,7 @@
 package com.safetynet.safetynetalerts.business;
 
+import com.safetynet.safetynetalerts.DTO.AllInfosPersonDTO;
 import com.safetynet.safetynetalerts.DTO.ChildDTO;
-import com.safetynet.safetynetalerts.DTO.InfosPersonDTO;
 import com.safetynet.safetynetalerts.exceptions.PersonNotFoundException;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -97,47 +96,27 @@ public class PersonServiceImpl implements PersonService {
      * @return child list's present, with their first and last name, age and a list of who lives with them.
      */
     //TODO : Peut le faire avec du stream? prob sur la liste des personnes vivant avec eux
-    public List<ChildDTO> getChildByAddress(String address) {
+    public List<ChildDTO> childAlert(String address) {
         //log.info
-      /*  List<Person> listPersonsAtTheAddress = getPersonsAtAddress(address);
-
-        return listPersonsAtTheAddress.stream()
-                .map(person -> {
-                            final MedicalRecord medicalRecord = medicalRecordRepository.getById(person.getId()).orElseThrow();
-                            List<String> personWithChild = new ArrayList<>();
-                            if (medicalRecord.getAge() < 19) {
-                                for (Person adult : listPersonsAtTheAddress) {
-                                    if (!adult.getId().equals(person.getId())) {
-                                        personWithChild.add(adult.getId());
-                                    }
-                                }
-                                return new ChildDTO(person, medicalRecord, personWithChild);
-                            }
-                            return null;
-                        }
-                )
+        List<Person> listPersonsAtTheAddress = getPersonsAtAddress(address);
+        List<MedicalRecord> medicalRecords = listPersonsAtTheAddress
+                .stream()
+                .map(p -> medicalRecordService.getMedicalRecordById(p.getId()))
                 .toList();
 
-*/
-        //log.info
-        List<ChildDTO> childAtAddress = new ArrayList<>();
-        List<Person> listPersonsAtTheAddress = getPersonsAtAddress(address);
+        return listPersonsAtTheAddress.stream()
+                .filter(p -> getMedicalRecord(medicalRecords, p).isMinor())
+                .map(child -> {
+                    MedicalRecord medicalRecord = getMedicalRecord(medicalRecords, child);
+                    List<Person> personWithChild = listPersonsAtTheAddress
+                            .stream().filter(p -> !p.getId().equals(child.getId()))
+                            .toList();
+                    return new ChildDTO(child, medicalRecord, personWithChild);
+                }).toList();
+    }
 
-        for (Person personAtTheAddress : listPersonsAtTheAddress) {
-            //log.debug
-            MedicalRecord medicalRecordPerson = medicalRecordService.getMedicalRecordById(personAtTheAddress.getId());
-            if (medicalRecordPerson.getAge() < 19) {
-                List<String> personWithChild = new ArrayList<>();
-                for (Person otherPersons : listPersonsAtTheAddress) {
-                    if (otherPersons != personAtTheAddress) {
-                        personWithChild.add(otherPersons.getId());
-                    }
-                }
-                ChildDTO child = new ChildDTO(personAtTheAddress, medicalRecordPerson, personWithChild);
-                childAtAddress.add(child);
-            }
-        }
-        return childAtAddress;
+    private static MedicalRecord getMedicalRecord(List<MedicalRecord> medicalRecords, Person person) {
+        return medicalRecords.stream().filter(m -> m.getId().equals(person.getId())).findFirst().orElseThrow();
     }
 
     /**
@@ -158,12 +137,12 @@ public class PersonServiceImpl implements PersonService {
      * @return : - With first name : a specific person
      * - Without first name : the list of persons with that name.
      */
-    public List<InfosPersonDTO> getInfosPersonByID(String lastName, String firstName) {
+    public List<AllInfosPersonDTO> getInfosPersonByID(String lastName, String firstName) {
 
         if (StringUtils.isBlank(lastName)) {
             throw new IllegalArgumentException("LastName can't be null, empty or blank");
         }
-        //Pour avoir soit une personne retournée, soit toute la famille en fonction des paramètres donnée en entrée
+        //Pour avoir soit une personne retournée, soit toute la famille en fonction des paramètres données en entrée
         Predicate<Person> predicate = p -> p.getLastName().equals(lastName);
         if (StringUtils.isNotBlank(firstName)) {
             predicate = predicate.and(p -> p.getFirstName().equals(firstName));
@@ -177,9 +156,8 @@ public class PersonServiceImpl implements PersonService {
         return persons
                 .stream()
                 .map(person -> {
-                    //final MedicalRecord medicalRecord = medicalRecordRepository.getById(person.getId()).orElseThrow();
                     MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordById(person.getId());
-                    return new InfosPersonDTO(person, medicalRecord);
+                    return new AllInfosPersonDTO(person, medicalRecord);
                 })
                 .toList();
     }

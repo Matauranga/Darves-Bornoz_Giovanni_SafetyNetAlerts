@@ -10,18 +10,27 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-//Todo: javadoc
+/**
+ *
+ */
 @Service
 public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @Autowired
     DataStorage dataStorage;
 
+    /**
+     * @return a list of all medical records.
+     */
     @Override
     public List<MedicalRecord> getAll() {
         return dataStorage.getMedicalRecords();
     }
 
+    /**
+     * @param id the id of medical record.
+     * @return a medical record if it exists.
+     */
     @Override
     public Optional<MedicalRecord> getById(String id) {
         Optional<MedicalRecord> medicalRecord = dataStorage.getMedicalRecords().stream()
@@ -33,6 +42,10 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
         return medicalRecord;
     }
 
+    /**
+     * @param entity a medical record.
+     * @return the medical record create or update.
+     */
     @Override
     public MedicalRecord saveOrUpdate(MedicalRecord entity) {
 
@@ -49,6 +62,9 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
         return entity;
     }
 
+    /**
+     * @param id the id of medical record to delete.
+     */
     @Override
     public void delete(String id) {
         MedicalRecord medicalRecordToDelete = dataStorage.getMedicalRecords()

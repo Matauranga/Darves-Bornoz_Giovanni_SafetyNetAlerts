@@ -1,7 +1,7 @@
 package com.safetynet.safetynetalerts.controller;
 
+import com.safetynet.safetynetalerts.DTO.AllInfosPersonDTO;
 import com.safetynet.safetynetalerts.DTO.ChildDTO;
-import com.safetynet.safetynetalerts.DTO.InfosPersonDTO;
 import com.safetynet.safetynetalerts.business.PersonService;
 import com.safetynet.safetynetalerts.model.Person;
 import jakarta.validation.Valid;
@@ -47,17 +47,16 @@ public class PersonController {
     @GetMapping("/childAlert")
     public List<ChildDTO> childAlertByAddress(@RequestParam String address) {
         //log.info
-        return personService.getChildByAddress(address);
+        return personService.childAlert(address);
     }
 
     @GetMapping("/personInfo")
-    public List<InfosPersonDTO> personInfosByID(@RequestParam(required = true) String lastName,
-                                                @RequestParam(required = false) String firstName
+    public List<AllInfosPersonDTO> personInfosByID(@RequestParam(required = true) String lastName,
+                                                   @RequestParam(required = false) String firstName
     ) {
-        List<InfosPersonDTO> infosPersonDTO = personService.getInfosPersonByID(lastName, firstName);
-//TODO : a voir
+        List<AllInfosPersonDTO> infosPersons = personService.getInfosPersonByID(lastName, firstName);
         log.info("Request success personInfosByID");
-        return infosPersonDTO;
+        return infosPersons;
     }
 
     @GetMapping("/communityEmail")

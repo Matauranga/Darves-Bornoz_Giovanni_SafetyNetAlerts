@@ -7,35 +7,28 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class ChildDTO {
+public class AllInfosPersonDTO {
     private final String firstName;
     private final String lastName;
     private final String address;
     private final String zip;
     private final String city;
-    private final int age;
-    private final List<PersonWithChild> personWithChild;
+    private final Integer age;
+    private final String email;
+    private final List<String> medications;
+    private final List<String> allergies;
 
-    public ChildDTO(Person person, MedicalRecord medicalRecord, List<Person> personWhitChild) {
+    public AllInfosPersonDTO(Person person, MedicalRecord medicalRecord) {
+
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
         this.address = person.getAddress();
         this.zip = person.getZip();
         this.city = person.getCity();
         this.age = medicalRecord.getAge();
-        this.personWithChild = personWhitChild.stream().map(PersonWithChild::new).toList();
-
-    }
-
-    @Getter
-    public static class PersonWithChild {
-        private final String firstName;
-        private final String lastName;
-
-        PersonWithChild(Person person) {
-            this.firstName = person.getFirstName();
-            this.lastName = person.getLastName();
-        }
+        this.email = person.getEmail();
+        this.medications = medicalRecord.getMedications();
+        this.allergies = medicalRecord.getAllergies();
     }
 
 }

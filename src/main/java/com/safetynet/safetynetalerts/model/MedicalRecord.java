@@ -45,4 +45,8 @@ public class MedicalRecord implements Entity<MedicalRecord> {
         return Period.between(birthDay, LocalDate.now()).getYears();
     }
 
+    public boolean isMinor(){
+        return getAge() <= 18;
+    }
+
 }

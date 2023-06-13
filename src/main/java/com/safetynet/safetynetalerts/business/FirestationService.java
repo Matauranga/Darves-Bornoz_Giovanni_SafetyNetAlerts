@@ -1,8 +1,8 @@
 package com.safetynet.safetynetalerts.business;
 
-import com.safetynet.safetynetalerts.DTO.CountAdultChildByFirestationWithInfosPersonDTO;
-import com.safetynet.safetynetalerts.DTO.InfosPersonLivingAtAddressDTO;
-import com.safetynet.safetynetalerts.DTO.InfosPersonsLivingAtAddressAndFirestationToCallDTO;
+import com.safetynet.safetynetalerts.DTO.CountAdultChildWithInfosPersonDTO;
+import com.safetynet.safetynetalerts.DTO.FireAlertDTO;
+import com.safetynet.safetynetalerts.DTO.FloodAlertDTO;
 import com.safetynet.safetynetalerts.model.Firestation;
 import com.safetynet.safetynetalerts.model.Person;
 
@@ -22,9 +22,9 @@ public interface FirestationService {
 
     List<String> getPhoneByFirestation(Integer firestationNumber);
 
-    CountAdultChildByFirestationWithInfosPersonDTO personsListCoveredByFirestationAndAdultChildCount(Integer stationNumber);
+    CountAdultChildWithInfosPersonDTO personsListCoveredByFirestationAndAdultChildCount(Integer stationNumber);
 
-    InfosPersonsLivingAtAddressAndFirestationToCallDTO getInfosPersonsLivingAtAddressAndFirestationToCall(String address);
+    FireAlertDTO getInfosPersonsLivingAtAddressAndFirestationToCall(String address);
 
-    List<InfosPersonLivingAtAddressDTO> getHouseholdServedByFirestation(Set<Integer> station);
+    List<FloodAlertDTO> getHouseholdServedByFirestation(Set<Integer> station);
 }

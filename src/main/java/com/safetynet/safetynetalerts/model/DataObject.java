@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class DataObject {
     List<Person> persons;
-    List<MedicalRecord> medicalrecords;
+    List<MedicalRecord> medicalrecords;//TODO : si problem regarder ici
     List<Firestation> firestations;
 
 }

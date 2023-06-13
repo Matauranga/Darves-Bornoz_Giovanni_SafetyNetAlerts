@@ -1,8 +1,8 @@
 package com.safetynet.safetynetalerts.controller;
 
-import com.safetynet.safetynetalerts.DTO.CountAdultChildByFirestationWithInfosPersonDTO;
-import com.safetynet.safetynetalerts.DTO.InfosPersonLivingAtAddressDTO;
-import com.safetynet.safetynetalerts.DTO.InfosPersonsLivingAtAddressAndFirestationToCallDTO;
+import com.safetynet.safetynetalerts.DTO.CountAdultChildWithInfosPersonDTO;
+import com.safetynet.safetynetalerts.DTO.FireAlertDTO;
+import com.safetynet.safetynetalerts.DTO.FloodAlertDTO;
 import com.safetynet.safetynetalerts.business.FirestationService;
 import com.safetynet.safetynetalerts.model.Firestation;
 import jakarta.validation.Valid;
@@ -50,20 +50,20 @@ public class FirestationController {
         return firestationService.getPhoneByFirestation(firestation);
     }
 
-    @GetMapping("/firestation")// TODO : Problème ou mauvaise endroit ????
-    public CountAdultChildByFirestationWithInfosPersonDTO personsCoverByFirestation(@RequestParam Integer stationNumber) {
+    @GetMapping("/firestation")
+    public CountAdultChildWithInfosPersonDTO personsCoverByFirestation(@RequestParam Integer stationNumber) {
 
         return firestationService.personsListCoveredByFirestationAndAdultChildCount(stationNumber);
     }
 
     @GetMapping("/fire")
-    public InfosPersonsLivingAtAddressAndFirestationToCallDTO fireAlertAtAddress(@RequestParam String address) {
+    public FireAlertDTO fireAlertAtAddress(@RequestParam String address) {
 
         return firestationService.getInfosPersonsLivingAtAddressAndFirestationToCall(address);
     }
 
     @GetMapping("/flood/stations")
-    public List<InfosPersonLivingAtAddressDTO> floodAlert(@RequestParam Set<Integer> stations) { //liste de stationS ??
+    public List<FloodAlertDTO> floodAlert(@RequestParam Set<Integer> stations) { //liste de stationS ??
 
         return firestationService.getHouseholdServedByFirestation(stations);
     }

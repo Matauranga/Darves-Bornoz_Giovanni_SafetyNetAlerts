@@ -25,7 +25,7 @@ public class MedicalRecordRepositoryImplTest {
     private MedicalRecordRepositoryImpl medicalRecordRepositoryImpl;
 
     @Test
-    void getById() {
+    void getByIdTest() {
         // GIVEN
         final String id = "Paul-Machin";
         final MedicalRecord expectedMedicalRecord = new MedicalRecord("Paul", "Machin", null, null, null);
@@ -52,7 +52,7 @@ public class MedicalRecordRepositoryImplTest {
     void getAllTest() {
         // GIVEN
         final MedicalRecord expectedMedicalRecord = new MedicalRecord("Paul", "Machin", null,
-                list(null),
+                list(null), //TODO
                 list(null));
 
         //WHEN
@@ -96,9 +96,10 @@ public class MedicalRecordRepositoryImplTest {
         verify(dataStorage, times(3)).getMedicalRecords();
     }
 
+
     @Disabled
     @Test
-    void updateMedicalRecordNotFoundExceptionTest() {
+    void updateMedicalRecordNotFoundExceptionTest() {//TODO : inutile car si non trouver alors cest getId qui renvoie l'err ??
         // GIVEN
         final MedicalRecord expectedMedicalRecord = new MedicalRecord("Paul", "Machin", "10/10/1100",
                 list("propane:NoLimit"),
@@ -130,7 +131,7 @@ public class MedicalRecordRepositoryImplTest {
     }
 
     @Test
-    void deleteMedicalRecordNotfoundExceptionTest() {
+    void deleteMedicalRecordNotFoundExceptionTest() {
         final MedicalRecord expectedMedicalRecord = new MedicalRecord("Paul", "Machin", null,
                 list(null),
                 list(null));
@@ -141,3 +142,4 @@ public class MedicalRecordRepositoryImplTest {
         verify(dataStorage, times(1)).getMedicalRecords();
     }
 }
+

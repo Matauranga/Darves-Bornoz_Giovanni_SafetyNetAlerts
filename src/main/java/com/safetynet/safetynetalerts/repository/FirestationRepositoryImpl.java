@@ -10,18 +10,27 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-//Todo: javadoc
+/**
+ *
+ */
 @Service
 public class FirestationRepositoryImpl implements FirestationRepository {
     private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @Autowired
     DataStorage dataStorage;
 
+    /**
+     * @return a list of all firestations.
+     */
     @Override
     public List<Firestation> getAll() {
         return dataStorage.getFirestations();
     }
 
+    /**
+     * @param id the id of firestation.
+     * @return a firestation if she exists.
+     */
     @Override
     public Optional<Firestation> getById(String id) {
         Optional<Firestation> firestation = dataStorage.getFirestations().stream()
@@ -33,6 +42,10 @@ public class FirestationRepositoryImpl implements FirestationRepository {
         return firestation;
     }
 
+    /**
+     * @param entity a firestation.
+     * @return the firestation create or update.
+     */
     @Override
     public Firestation saveOrUpdate(Firestation entity) {
 
@@ -49,6 +62,9 @@ public class FirestationRepositoryImpl implements FirestationRepository {
     }
 
     //TODO : return infos sur le delete (code d'erreur ou de réussite)?
+    /**
+     * @param id the id of firestation to delete.
+     */
     @Override
     public void delete(String id) {
         Firestation firestationToDelete = dataStorage.getFirestations()

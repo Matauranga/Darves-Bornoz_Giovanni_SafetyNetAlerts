@@ -14,12 +14,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+
+//TODO revoir les test, ajoutez les displayName etc...
 @SpringBootTest
 class PersonRepositoryImplTest {
-
     @Mock
     private DataStorage dataStorage;
-
     @InjectMocks
     private PersonRepositoryImpl personRepositoryImpl;
 
@@ -113,13 +113,13 @@ class PersonRepositoryImplTest {
 
     @Disabled
     @Test
-    void updatePersonNotFoundExcpetionTest() { //todo :inutile car si non trouver alors cest getId qui renvoie l'err
+    void updatePersonNotFoundExceptionTest() { //todo :inutile car si non trouver alors cest getId qui renvoie l'err ??
         // GIVEN
         final Person expectedPerson = new Person("Paul", "Machin", null, null, null, null, null);
         final Person modifyPerson = new Person("Paul", "Ricard", "123 Mayol", null, null, null, null);
         // WHEN
 
-        //  when(dataStorage.getPersons()).thenReturn(List.of(expectedPerson));
+        // hen(dataStorage.getPersons()).thenReturn(List.of(expectedPerson));
         // personRepositoryImpl.update(modifyPerson);
 
         //THEN

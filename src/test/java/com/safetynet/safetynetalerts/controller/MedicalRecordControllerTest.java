@@ -36,7 +36,7 @@ public class MedicalRecordControllerTest {
     }
 
     @Test
-    @DisplayName("Test de la mathode POST")
+    @DisplayName("Test de la methode POST")
     public void createMedicalRecordTest() throws Exception {
 
         MedicalRecord medicalRecordTest = new MedicalRecord("Gio", "Agio", "01/01/0101",

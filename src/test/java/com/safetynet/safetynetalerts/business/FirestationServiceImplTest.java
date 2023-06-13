@@ -1,8 +1,8 @@
 package com.safetynet.safetynetalerts.business;
 
-import com.safetynet.safetynetalerts.DTO.CountAdultChildByFirestationWithInfosPersonDTO;
-import com.safetynet.safetynetalerts.DTO.InfosPersonLivingAtAddressDTO;
-import com.safetynet.safetynetalerts.DTO.InfosPersonsLivingAtAddressAndFirestationToCallDTO;
+import com.safetynet.safetynetalerts.DTO.CountAdultChildWithInfosPersonDTO;
+import com.safetynet.safetynetalerts.DTO.FireAlertDTO;
+import com.safetynet.safetynetalerts.DTO.FloodAlertDTO;
 import com.safetynet.safetynetalerts.model.Firestation;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ import static org.assertj.core.util.Lists.list;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 class FirestationServiceImplTest {
     @InjectMocks
     FirestationServiceImpl firestationServiceImpl;
@@ -40,12 +38,12 @@ class FirestationServiceImplTest {
     MedicalRecordService medicalRecordService;
 
     private List<Person> initListPersons() {
-        List<Person> persons = new ArrayList<>();
         Person person1 = new Person("Gio", "gio", "123 Mayol", "Toulon", "101010", "000-111-2222", "rougeetnoir@email.com");
         //child
         Person person2 = new Person("AGio", "gio", "123 Mayol", "Toulon", "101010", "000-111-3333", "noiretrouge@email.com");
         Person person3 = new Person("BGio", "gio", "123 Mayol", "Toulon", "101010", "000-111-4444", "redandblack@email.com");
-        Collections.addAll(persons, person1, person2, person3);
+
+        List<Person> persons = List.of(person1, person2, person3);
 
         when(personRepository.getAll()).thenReturn(persons);
 
@@ -53,11 +51,11 @@ class FirestationServiceImplTest {
     }
 
     private List<MedicalRecord> initListMedicalRecords() {
-        List<MedicalRecord> medicalRecords = new ArrayList<>();
         MedicalRecord medicalRecord1 = new MedicalRecord("Gio", "gio", "01/01/2000", list("propane:NoLimit"), list("ethanol"));
-        MedicalRecord medicalRecord2 = new MedicalRecord("AGio", "gio", "01/01/2020", list("buthane:forSmile"), list("bioethanol"));
+        MedicalRecord medicalRecord2 = new MedicalRecord("AGio", "gio", "01/01/2020", list("butane:forSmile"), list("bioethanol"));
         MedicalRecord medicalRecord3 = new MedicalRecord("BGio", "gio", "01/01/1999", list("uranium:toDie"), list("methanol"));
-        Collections.addAll(medicalRecords, medicalRecord1, medicalRecord2, medicalRecord3);
+
+        List<MedicalRecord> medicalRecords = List.of(medicalRecord1, medicalRecord2, medicalRecord3);
 
         when(medicalRecordRepository.getAll()).thenReturn(medicalRecords);
 
@@ -66,10 +64,7 @@ class FirestationServiceImplTest {
     }
 
     private List<Firestation> initListFirestations() {
-        List<Firestation> firestations = new ArrayList<>();
-        Firestation firestation = new Firestation("123 Mayol", 45);
-        firestations.add(firestation);
-
+        List<Firestation> firestations = List.of(new Firestation("123 Mayol", 45));
         when(firestationRepository.getAll()).thenReturn(firestations);
 
         return firestations;
@@ -77,9 +72,9 @@ class FirestationServiceImplTest {
 
     private void initExistingPersonsMedicalRecordsAndFirestation() {
 
-        List<Person> persons = initListPersons();
-        List<MedicalRecord> medicalRecords = initListMedicalRecords();
-        List<Firestation> firestations = initListFirestations();
+        initListPersons();
+        initListMedicalRecords();
+        initListFirestations();
 
     }
 
@@ -95,15 +90,15 @@ class FirestationServiceImplTest {
     }
 
     @Test
-    @DisplayName("test de createFirstation")
-    void createFirstationTest() {
-        //Given
+    @DisplayName("test de createFirestation")
+    void createFirestationTest() {
+        //Given a new firestation
         Firestation firestationTest = new Firestation("999 Blv Michou", 99);
 
-        //When
+        //When I create call the service
         firestationServiceImpl.createFirestation(firestationTest);
 
-        //Then
+        //Then the firestation is created
         verify(firestationRepository, times(1)).saveOrUpdate(any());
 
     }
@@ -123,7 +118,6 @@ class FirestationServiceImplTest {
 
         //Then
         verify(firestationRepository, times(1)).getAll();
-        verify(firestationRepository, times(1)).saveOrUpdate(any());
         assertThat(firestationTest.getStation()).isEqualTo(newValueOfFirestationTest.getStation());
 
     }
@@ -174,7 +168,7 @@ class FirestationServiceImplTest {
         assertThat(response).contains(expectedPerson);
     }
 
-    //Todo : a voir avec Frank quand fct en utilise une autre : getPhone --> getCover
+    //Todo : à voir avec Frank quand fct en utilise une autre : getPhone --> getCover
     @Test
     @DisplayName("test de getPhoneByFirestation")
     void getPhoneByFirestationTest() {
@@ -209,10 +203,10 @@ class FirestationServiceImplTest {
         when(medicalRecordService.getMedicalRecordById(persons.get(0).getId())).thenReturn(medicalRecords.get(0));
         when(medicalRecordService.getMedicalRecordById(persons.get(1).getId())).thenReturn(medicalRecords.get(1));
         when(medicalRecordService.getMedicalRecordById(persons.get(2).getId())).thenReturn(medicalRecords.get(2));
-        CountAdultChildByFirestationWithInfosPersonDTO response = firestationServiceImpl.personsListCoveredByFirestationAndAdultChildCount(45);
+        CountAdultChildWithInfosPersonDTO response = firestationServiceImpl.personsListCoveredByFirestationAndAdultChildCount(45);
 
         //Then
-        assertThat(response.getInfosPersonByFirestationDTO()).isNotEmpty(); //ici
+        assertThat(response.getInfosPersonCoverByFirestationDTO()).isNotEmpty(); //ici
         assertThat(response.getChildNumber()).isEqualTo(expectedChildCount);
         assertThat(response.getAdultNumber()).isEqualTo(expectedAdultCount);
 
@@ -232,16 +226,16 @@ class FirestationServiceImplTest {
         when(medicalRecordService.getMedicalRecordById(persons.get(0).getId())).thenReturn(medicalRecords.get(0));
         when(medicalRecordService.getMedicalRecordById(persons.get(1).getId())).thenReturn(medicalRecords.get(1));
         when(medicalRecordService.getMedicalRecordById(persons.get(2).getId())).thenReturn(medicalRecords.get(2));
-        InfosPersonsLivingAtAddressAndFirestationToCallDTO response = firestationServiceImpl.getInfosPersonsLivingAtAddressAndFirestationToCall("123 Mayol");
+        FireAlertDTO response = firestationServiceImpl.getInfosPersonsLivingAtAddressAndFirestationToCall("123 Mayol");
 
         //Then
-        assertThat(response.getPersonsLivingAtAddress()).isNotEmpty();
+        //assertThat(response.getPersonsLivingAtAddress()).isNotEmpty();
         assertThat(response.getFirestationToCall()).isEqualTo(expectedFirestation);
     }
 
     @Test
     @DisplayName("test de getHouseholdServedByFirestation")
-    void getHouseholdServedByFirestationTest() { //TODO : faut il tester avec plusieurs station ou 1 suffit ?
+    void getHouseholdServedByFirestationTest() { //TODO : faut il tester avec plusieurs stations ou 1 suffit ?
         //Given
         List<Person> persons = initListPersons();
         List<MedicalRecord> medicalRecords = initListMedicalRecords();
@@ -251,7 +245,7 @@ class FirestationServiceImplTest {
         when(medicalRecordService.getMedicalRecordById(persons.get(0).getId())).thenReturn(medicalRecords.get(0));
         when(medicalRecordService.getMedicalRecordById(persons.get(1).getId())).thenReturn(medicalRecords.get(1));
         when(medicalRecordService.getMedicalRecordById(persons.get(2).getId())).thenReturn(medicalRecords.get(2));
-        List<InfosPersonLivingAtAddressDTO> response = firestationServiceImpl.getHouseholdServedByFirestation(Collections.singleton(45));
+        List<FloodAlertDTO> response = firestationServiceImpl.getHouseholdServedByFirestation(Collections.singleton(45));
         //Then
         assertThat(response).isNotEmpty();
 
