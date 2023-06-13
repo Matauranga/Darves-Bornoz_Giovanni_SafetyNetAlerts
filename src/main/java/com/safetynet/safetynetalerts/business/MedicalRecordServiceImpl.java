@@ -51,22 +51,20 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     }
 
     /**
-     * @param updateMedicalRecord
+     * @param newValuesOfMedicalRecord new values of medical record
      */
-    public void updateMedicalRecord(MedicalRecord updateMedicalRecord) {
-
-        MedicalRecord medicalRecord = medicalRecordRepository.getAll()
+    public void updateMedicalRecord(MedicalRecord newValuesOfMedicalRecord) {
+        medicalRecordRepository.getAll()
                 .stream()
-                .filter(p -> updateMedicalRecord.getId().equals(p.getId()))
+                .filter(p -> newValuesOfMedicalRecord.getId().equals(p.getId()))
                 .findFirst()
-                .orElseThrow(() -> new MedicalRecordNotFoundException(updateMedicalRecord.getFirstName(), updateMedicalRecord.getLastName()))
-                .update(updateMedicalRecord);
+                .orElseThrow(() -> new MedicalRecordNotFoundException(newValuesOfMedicalRecord.getFirstName(), newValuesOfMedicalRecord.getLastName()))
+                .update(newValuesOfMedicalRecord);
 
-        medicalRecordRepository.saveOrUpdate(medicalRecord);
     }
 
     /**
-     * @param medicalRecordToDelete
+     * @param medicalRecordToDelete the medical record to delete
      */
     public void deleteMedicalRecord(MedicalRecord medicalRecordToDelete) {
         medicalRecordRepository.delete(medicalRecordToDelete.getId());

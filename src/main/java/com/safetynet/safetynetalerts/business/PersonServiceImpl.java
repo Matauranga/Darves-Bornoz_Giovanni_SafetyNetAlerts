@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  *
@@ -56,47 +57,46 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
-     * @param updatePerson
+     * @param newValuesOfPerson the new values of person
      */
-    public void updatePerson(Person updatePerson) {
-        Person person = personRepository.getAll()
+    public void updatePerson(Person newValuesOfPerson) {
+        personRepository.getAll()
                 .stream()
-                .filter(p -> updatePerson.getId().equals(p.getId()))
+                .filter(p -> newValuesOfPerson.getId().equals(p.getId()))
                 .findFirst()
-                .orElseThrow(() -> new PersonNotFoundException(updatePerson.getFirstName(), updatePerson.getLastName()))
-                .update(updatePerson);
-
-        personRepository.saveOrUpdate(person);
+                .orElseThrow(() -> new PersonNotFoundException(newValuesOfPerson.getFirstName(), newValuesOfPerson.getLastName()))
+                .update(newValuesOfPerson);
 
     }
 
     /**
-     * @param personToDelete
+     * @param personToDelete the person to delete
      */
 
     public void deletePerson(Person personToDelete) {
         personRepository.delete(personToDelete.getId());
     }
 
-/*
-    /********************************************   TODO : changer de place certaines fonctions  *******************************************************************************/
+
+    /* ********************************************************** URL Endpoints ********************************************************** */
+
 
     /**
-     * @param address
-     * @return
+     * @param address where want the persons living
+     * @return a list of persons(Object)
      */
     public List<Person> getPersonsAtAddress(String address) {
         return personRepository.getAll()
                 .stream()
                 .filter(p -> p.getAddress().equals(address))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     /**
      * @param address where is the alert
-     * @return child list's present, their age and who lives with them
+     * @return child list's present, with their first and last name, age and a list of who lives with them.
      */
-    //TODO : Peut le faire avec du stream?
+    //TODO : Peut le faire avec du stream? prob sur la liste des personnes vivant avec eux
     public List<ChildDTO> getChildByAddress(String address) {
         //log.info
       /*  List<Person> listPersonsAtTheAddress = getPersonsAtAddress(address);
@@ -141,25 +141,22 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
-     * @param city
-     * @return
+     * @param city the city
+     * @return the list of emails of people living in the city put in @param.
      */
     public List<String> getEmailByCity(String city) {
-        List<String> emailPersonInCity = new ArrayList<>();
-        List<Person> personInCity = personRepository.getAll()
+        return personRepository.getAll()
                 .stream()
                 .filter(p -> p.getCity().equals(city))
+                .map(Person::getEmail)
                 .toList();
-        for (Person person : personInCity) {
-            emailPersonInCity.add(person.getEmail());
-        }
-        return emailPersonInCity;
     }
 
     /**
-     * @param firstName
-     * @param lastName
-     * @return
+     * @param firstName Optional : the first name to have a specific person
+     * @param lastName  Mandatory : the last name
+     * @return : - With first name : a specific person
+     * - Without first name : the list of persons with that name.
      */
     public List<InfosPersonDTO> getInfosPersonByID(String lastName, String firstName) {
 
