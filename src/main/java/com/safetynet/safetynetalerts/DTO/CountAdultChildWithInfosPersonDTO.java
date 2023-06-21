@@ -8,12 +8,11 @@ import java.util.List;
 public class CountAdultChildWithInfosPersonDTO {
     private final Integer adultNumber;
     private final Integer childNumber;
-    private final List<InfosPersonCoverByFirestationDTO> infosPersonCoverByFirestationDTO;
+    private final List<InfosPersonCoverByFirestationDTO> personsCoverByFirestation;
 
     public CountAdultChildWithInfosPersonDTO(Integer adultNumber, Integer childNumber, List<InfosPersonCoverByFirestationDTO> infosPersonCoverByFirestationDTO) {
         this.adultNumber = adultNumber;
         this.childNumber = childNumber;
-        this.infosPersonCoverByFirestationDTO = infosPersonCoverByFirestationDTO;
+        this.personsCoverByFirestation = infosPersonCoverByFirestationDTO;
     }
-
 }

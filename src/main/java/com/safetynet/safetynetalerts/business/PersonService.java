@@ -5,6 +5,7 @@ import com.safetynet.safetynetalerts.DTO.ChildDTO;
 import com.safetynet.safetynetalerts.model.Person;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PersonService {
 
@@ -18,7 +19,7 @@ public interface PersonService {
 
     List<ChildDTO> childAlert(String address);
 
-    List<String> getEmailByCity(String city);
+    Set<String> getEmailByCity(String city);
 
     List<AllInfosPersonDTO> getInfosPersonByID(String lastName, String firstName);
 }

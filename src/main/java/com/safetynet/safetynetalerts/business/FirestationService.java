@@ -20,7 +20,7 @@ public interface FirestationService {
 
     List<Person> getPersonsCoverByFirestation(Integer firestationNumber);
 
-    List<String> getPhoneByFirestation(Integer firestationNumber);
+    Set<String> getPhoneByFirestation(Integer firestationNumber);
 
     CountAdultChildWithInfosPersonDTO personsListCoveredByFirestationAndAdultChildCount(Integer stationNumber);
 

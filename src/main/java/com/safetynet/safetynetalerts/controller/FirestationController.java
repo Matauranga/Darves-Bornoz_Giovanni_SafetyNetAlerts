@@ -20,10 +20,10 @@ public class FirestationController {
     @Autowired
     private FirestationService firestationService;
 
-    @GetMapping("/allfirestation") // TODO : faut-il enlevez tout les get ? R de CRUD
+   /* @GetMapping("/allfirestation")
     public List<Firestation> listFirestations() {
         return firestationService.getAllFirestations();
-    }
+    }*/
 
     @PostMapping("/firestation")
     public ResponseEntity<Firestation> createFirestation(@Valid @RequestBody Firestation firestation) {
@@ -45,7 +45,7 @@ public class FirestationController {
     }
 
     @GetMapping("/phoneAlert")
-    public List<String> phoneAlertByFirestationNumber(@RequestParam Integer firestation) {
+    public Set<String> phoneAlertByFirestationNumber(@RequestParam Integer firestation) {
         //log.err <1
         return firestationService.getPhoneByFirestation(firestation);
     }
@@ -67,6 +67,4 @@ public class FirestationController {
 
         return firestationService.getHouseholdServedByFirestation(stations);
     }
-
-
 }

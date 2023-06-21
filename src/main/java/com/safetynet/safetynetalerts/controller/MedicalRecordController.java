@@ -7,18 +7,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/medicalRecord")
 public class MedicalRecordController {
     @Autowired
     private MedicalRecordService medicalRecordService;
 
-    @GetMapping()
+    /*@GetMapping()
     public List<MedicalRecord> listMedicalRecords() {
         return medicalRecordService.getAllMedicalRecords();
-    }
+    }*/
 
     @PostMapping()
     public ResponseEntity<MedicalRecord> createMedicalRecord(@RequestBody MedicalRecord medicalRecord) {

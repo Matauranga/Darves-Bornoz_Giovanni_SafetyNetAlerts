@@ -10,20 +10,14 @@ import java.util.List;
 public class ChildDTO {
     private final String firstName;
     private final String lastName;
-    private final String address;
-    private final String zip;
-    private final String city;
     private final int age;
-    private final List<PersonWithChild> personWithChild;
+    private final List<PersonWithChild> personsWithChild;
 
     public ChildDTO(Person person, MedicalRecord medicalRecord, List<Person> personWhitChild) {
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
-        this.address = person.getAddress();
-        this.zip = person.getZip();
-        this.city = person.getCity();
         this.age = medicalRecord.getAge();
-        this.personWithChild = personWhitChild.stream().map(PersonWithChild::new).toList();
+        this.personsWithChild = personWhitChild.stream().map(PersonWithChild::new).toList();
     }
 
     @Getter

@@ -6,11 +6,11 @@ import java.util.List;
 
 @Getter
 public class FireAlertDTO {
-    private final Integer firestationToCall;
-    private final List<InfosPersonForFireAlertDTO> infosPersonsToFireAlertDTO;
+    private final Integer firestationServingIt;
+    private final List<InfosPersonForFireAlertDTO> personsAtTheAddress;
 
     public FireAlertDTO(Integer firestationToCall, List<InfosPersonForFireAlertDTO> infosPersonsToFireAlertDTO) {
-        this.firestationToCall = firestationToCall;
-        this.infosPersonsToFireAlertDTO = infosPersonsToFireAlertDTO;
+        this.firestationServingIt = firestationToCall;
+        this.personsAtTheAddress = infosPersonsToFireAlertDTO;
     }
 }

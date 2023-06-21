@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -19,11 +20,11 @@ public class PersonController {
     @Autowired
     private PersonService personService;
 
-    @GetMapping("/person")
+   /* @GetMapping("/person")
     public List<Person> getListPersons() {
         List<Person> listPersons = personService.getAllPersons();
         return listPersons;
-    }
+    }*/
 
     @PostMapping("/person")
     public ResponseEntity<Person> createPerson(@Valid @RequestBody Person person) {
@@ -59,7 +60,7 @@ public class PersonController {
     }
 
     @GetMapping("/communityEmail")
-    public List<String> emailByCity(@RequestParam String city) {
+    public Set<String> emailByCity(@RequestParam String city) {
         //log.info
         return personService.getEmailByCity(city);
     }

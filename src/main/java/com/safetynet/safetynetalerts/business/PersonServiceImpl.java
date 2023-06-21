@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -120,14 +122,14 @@ public class PersonServiceImpl implements PersonService {
 
     /**
      * @param city the city
-     * @return the list of emails of people living in the city put in @param.
+     * @return the set of emails of people living in the city put in @param.
      */
-    public List<String> getEmailByCity(String city) {
+    public Set<String> getEmailByCity(String city) {
         return personRepository.getAll()
                 .stream()
                 .filter(p -> p.getCity().equals(city))
                 .map(Person::getEmail)
-                .toList();
+                .collect(Collectors.toSet());
     }
 
     /**

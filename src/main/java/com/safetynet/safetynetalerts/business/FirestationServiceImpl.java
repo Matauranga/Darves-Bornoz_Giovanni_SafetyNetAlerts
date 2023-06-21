@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -90,13 +91,13 @@ public class FirestationServiceImpl implements FirestationService {
 
     /**
      * @param firestationNumber firestation number.
-     * @return a list of phone number(String) cover by the firestation put in @param.
+     * @return a set of phone number(String) cover by the firestation put in @param.
      */
-    public List<String> getPhoneByFirestation(Integer firestationNumber) {
+    public Set<String> getPhoneByFirestation(Integer firestationNumber) {
         return getPersonsCoverByFirestation(firestationNumber)
                 .stream()
                 .map(Person::getPhone)
-                .toList();
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -164,8 +165,7 @@ public class FirestationServiceImpl implements FirestationService {
                 .toList();
 
 
-
-  List<InfosPersonForFloodAlertDTO> infosPersonsForFloodAlertByAddress = personRepository.getAll()
+        List<InfosPersonForFloodAlertDTO> infosPersonsForFloodAlertByAddress = personRepository.getAll()
                 .stream()
                 .filter(p -> firestationAddresses.contains(p.getAddress()))
                 .map(this::getInfosPersonForFloodAlertDTO)
@@ -175,7 +175,7 @@ public class FirestationServiceImpl implements FirestationService {
                 .map(address -> getFloodAlertDTO(infosPersonsForFloodAlertByAddress, address))
                 .toList();
 /*
-//TODO : lisible ?
+
         List<FloodAlertDTO> floodAlertDTO = firestationAddresses.stream()
                 .map(address -> {
                     List<InfosPersonForFloodAlertDTO> personLivingAtAddress = personRepository.getAll()
@@ -193,6 +193,11 @@ public class FirestationServiceImpl implements FirestationService {
         return floodAlertDTO;
     }
 
+    private InfosPersonForFloodAlertDTO getInfosPersonForFloodAlertDTO(Person person) {
+        var medicalRecord = medicalRecordService.getMedicalRecordById(person.getId());
+        return new InfosPersonForFloodAlertDTO(person, medicalRecord);
+    }
+
     private static FloodAlertDTO getFloodAlertDTO(List<InfosPersonForFloodAlertDTO> infosPersonsForFloodAlertByAddress, String address) {
         List<InfosPersonForFloodAlertDTO> infosPersonForFireAlertDTOS = infosPersonsForFloodAlertByAddress.stream()
                 .filter(p -> p.getAddress().equals(address))
@@ -200,8 +205,5 @@ public class FirestationServiceImpl implements FirestationService {
         return new FloodAlertDTO(address, infosPersonForFireAlertDTOS);
     }
 
-    private InfosPersonForFloodAlertDTO getInfosPersonForFloodAlertDTO(Person person) {
-        var medicalRecord = medicalRecordService.getMedicalRecordById(person.getId());
-        return new InfosPersonForFloodAlertDTO(person, medicalRecord);
-    }
+
 }
