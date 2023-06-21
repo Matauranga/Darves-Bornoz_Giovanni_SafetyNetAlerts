@@ -10,6 +10,7 @@ import java.util.List;
 public class InfosPersonForFireAlertDTO {
     private final String firstName;
     private final String lastName;
+    //TODO : si pas afficher address cest ici
     private final String address;
     private final String zip;
     private final String city;

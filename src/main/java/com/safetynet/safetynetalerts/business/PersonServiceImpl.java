@@ -34,18 +34,18 @@ public class PersonServiceImpl implements PersonService {
     MedicalRecordService medicalRecordService;
 
     /**
+     * @return List of all persons
+     */
+    public List<Person> getAllPersons() {
+        return personRepository.getAll();
+    }
+
+    /**
      * @param id of the person search
      * @return the person search
      */
     public Optional<Person> getPersonById(String id) {
         return personRepository.getById(id);
-    }
-
-    /**
-     * @return List of all persons
-     */
-    public List<Person> getAllPersons() {
-        return personRepository.getAll();
     }
 
     /**
@@ -95,7 +95,6 @@ public class PersonServiceImpl implements PersonService {
      * @param address where is the alert
      * @return child list's present, with their first and last name, age and a list of who lives with them.
      */
-    //TODO : Peut le faire avec du stream? prob sur la liste des personnes vivant avec eux
     public List<ChildDTO> childAlert(String address) {
         //log.info
         List<Person> listPersonsAtTheAddress = getPersonsAtAddress(address);

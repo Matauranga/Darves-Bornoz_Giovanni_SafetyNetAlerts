@@ -11,6 +11,8 @@ public class InfosPersonForFloodAlertDTO {
     private final String firstName;
     private final String lastName;
     private final String address;
+    private final String zip;
+    private final String city;
     private final String phone;
     private final Integer age;
     private final List<String> medications;
@@ -19,6 +21,8 @@ public class InfosPersonForFloodAlertDTO {
     public InfosPersonForFloodAlertDTO(Person person, MedicalRecord medicalRecord) {
         this.firstName = person.getFirstName();
         this.address = person.getAddress();
+        this.zip = person.getZip();
+        this.city = person.getCity();
         this.lastName = person.getLastName();
         this.phone = person.getPhone();
         this.age = medicalRecord.getAge();

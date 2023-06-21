@@ -24,7 +24,6 @@ public class ChildDTO {
         this.city = person.getCity();
         this.age = medicalRecord.getAge();
         this.personWithChild = personWhitChild.stream().map(PersonWithChild::new).toList();
-
     }
 
     @Getter
@@ -37,5 +36,4 @@ public class ChildDTO {
             this.lastName = person.getLastName();
         }
     }
-
 }

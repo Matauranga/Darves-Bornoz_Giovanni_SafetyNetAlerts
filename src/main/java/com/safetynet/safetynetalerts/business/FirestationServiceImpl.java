@@ -52,7 +52,6 @@ public class FirestationServiceImpl implements FirestationService {
                 .findFirst()
                 .orElseThrow(() -> new FirestationNotFoundException(newValueOfFirestation.getId()))
                 .update(newValueOfFirestation);
-
     }
 
     /**
@@ -164,24 +163,18 @@ public class FirestationServiceImpl implements FirestationService {
                 .map(Firestation::getAddress)
                 .toList();
 
-/*   List<InfosPersonForFloodAlertDTO> infosPersonsForFloodAlertByAddress = personRepository.getAll()
+
+
+  List<InfosPersonForFloodAlertDTO> infosPersonsForFloodAlertByAddress = personRepository.getAll()
                 .stream()
                 .filter(p -> firestationAddresses.contains(p.getAddress()))
-                .map(person -> {
-                    var medicalRecord = medicalRecordService.getMedicalRecordById(person.getId());
-                    return new InfosPersonForFloodAlertDTO(person, medicalRecord);
-                })
+                .map(this::getInfosPersonForFloodAlertDTO)
                 .toList();
 
         List<FloodAlertDTO> floodAlertDTO = firestationAddresses.stream()
-                .map(address -> {
-                    List<InfosPersonForFloodAlertDTO> infosPersonForFireAlertDTOS = infosPersonsForFloodAlertByAddress.stream()
-                            .filter(p -> p.getAddress().equals(address))
-                            .toList();
-                    return new FloodAlertDTO(address, infosPersonForFireAlertDTOS);
-                })
+                .map(address -> getFloodAlertDTO(infosPersonsForFloodAlertByAddress, address))
                 .toList();
-*/
+/*
 //TODO : lisible ?
         List<FloodAlertDTO> floodAlertDTO = firestationAddresses.stream()
                 .map(address -> {
@@ -196,7 +189,19 @@ public class FirestationServiceImpl implements FirestationService {
                     return new FloodAlertDTO(address, personLivingAtAddress);
                 })
                 .toList();
-
+*/
         return floodAlertDTO;
+    }
+
+    private static FloodAlertDTO getFloodAlertDTO(List<InfosPersonForFloodAlertDTO> infosPersonsForFloodAlertByAddress, String address) {
+        List<InfosPersonForFloodAlertDTO> infosPersonForFireAlertDTOS = infosPersonsForFloodAlertByAddress.stream()
+                .filter(p -> p.getAddress().equals(address))
+                .toList();
+        return new FloodAlertDTO(address, infosPersonForFireAlertDTOS);
+    }
+
+    private InfosPersonForFloodAlertDTO getInfosPersonForFloodAlertDTO(Person person) {
+        var medicalRecord = medicalRecordService.getMedicalRecordById(person.getId());
+        return new InfosPersonForFloodAlertDTO(person, medicalRecord);
     }
 }

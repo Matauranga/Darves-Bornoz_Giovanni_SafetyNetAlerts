@@ -32,11 +32,11 @@ public class PersonRepositoryImpl implements PersonRepository {
      * @param lastname  the last name of the person.
      * @return the person searched if it exists.
      */
-    @Override
+    /*@Override
     public Optional<Person> getByFirstnameAndLastname(String firstname, String lastname) {
         final String id = firstname + "-" + lastname;
         return this.getById(id);
-    }
+    }*/
 
     /**
      * @param id the id f the person.

@@ -13,5 +13,4 @@ public class FireAlertDTO {
         this.firestationToCall = firestationToCall;
         this.infosPersonsToFireAlertDTO = infosPersonsToFireAlertDTO;
     }
-
 }

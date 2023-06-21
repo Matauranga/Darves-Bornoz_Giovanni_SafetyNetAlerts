@@ -12,6 +12,5 @@ public class FloodAlertDTO {
     public FloodAlertDTO(String address, List<InfosPersonForFloodAlertDTO> personsLivingAtAddressDTO) {
         this.address = address;
         this.personsLivingAtAddressDTO = personsLivingAtAddressDTO;
-
     }
 }

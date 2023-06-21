@@ -24,7 +24,6 @@ public class DataStorageImpl implements DataStorage {
 
     private DataObject dataObject;
 
-    //TODO : ??? dou vient jakarta
     @Override
     @PostConstruct
     public void initDatas() throws IOException {
@@ -47,5 +46,4 @@ public class DataStorageImpl implements DataStorage {
     public List<MedicalRecord> getMedicalRecords() {
         return dataObject.getMedicalrecords();
     }
-
 }

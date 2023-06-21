@@ -16,7 +16,6 @@ import java.util.List;
 @Slf4j
 @RestController
 public class PersonController {
-
     @Autowired
     private PersonService personService;
 
@@ -64,7 +63,6 @@ public class PersonController {
         //log.info
         return personService.getEmailByCity(city);
     }
-
 }
 
 
