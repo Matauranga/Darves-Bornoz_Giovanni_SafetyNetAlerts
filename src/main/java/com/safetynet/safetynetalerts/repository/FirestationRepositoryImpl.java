@@ -2,8 +2,7 @@ package com.safetynet.safetynetalerts.repository;
 
 import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.Firestation;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +12,9 @@ import java.util.Optional;
 /**
  *
  */
+@Log4j2
 @Service
 public class FirestationRepositoryImpl implements FirestationRepository {
-    private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @Autowired
     DataStorage dataStorage;
 
@@ -37,7 +36,7 @@ public class FirestationRepositoryImpl implements FirestationRepository {
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
         if (firestation.isEmpty()) {
-            log.info("Firestation doesn't exist");
+            log.error("Firestation doesn't exist");
         }
         return firestation;
     }
@@ -62,6 +61,7 @@ public class FirestationRepositoryImpl implements FirestationRepository {
     }
 
     //TODO : return infos sur le delete (code d'erreur ou de réussite)?
+
     /**
      * @param id the id of firestation to delete.
      */

@@ -6,28 +6,43 @@ import lombok.Getter;
 
 import java.util.List;
 
+
 @Getter
 public class InfosPersonForFloodAlertDTO {
+
     private final String firstName;
     private final String lastName;
-    //TODO address !
-    private final String address;
-
     private final String phone;
+
     private final Integer age;
     private final List<String> medications;
     private final List<String> allergies;
 
+    //TODO: address à enlever
+    private final String address;
+
+
     public InfosPersonForFloodAlertDTO(Person person, MedicalRecord medicalRecord) {
         this.firstName = person.getFirstName();
-
-       this.address = person.getAddress();
-
         this.lastName = person.getLastName();
         this.phone = person.getPhone();
         this.age = medicalRecord.getAge();
         this.medications = medicalRecord.getMedications();
         this.allergies = medicalRecord.getAllergies();
+        this.address = person.getAddress();
+
     }
 
+   /* public String getTheAddress(String firstName, String lastName) {
+
+        String id = firstName + "-" + lastName;
+
+
+        return person.getAddress();
+    }*/
+
 }
+
+
+
+

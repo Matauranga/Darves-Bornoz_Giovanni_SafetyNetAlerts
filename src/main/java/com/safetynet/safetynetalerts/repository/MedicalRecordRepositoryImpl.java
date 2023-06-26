@@ -2,8 +2,7 @@ package com.safetynet.safetynetalerts.repository;
 
 import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +12,9 @@ import java.util.Optional;
 /**
  *
  */
+@Log4j2
 @Service
 public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
-    private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @Autowired
     DataStorage dataStorage;
 
@@ -33,6 +32,8 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
      */
     @Override
     public Optional<MedicalRecord> getById(String id) {
+        log.debug("Looking for {} medical record", id);
+
         Optional<MedicalRecord> medicalRecord = dataStorage.getMedicalRecords().stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst();

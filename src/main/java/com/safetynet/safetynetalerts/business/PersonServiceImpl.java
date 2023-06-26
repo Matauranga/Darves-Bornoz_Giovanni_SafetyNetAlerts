@@ -147,6 +147,9 @@ public class PersonServiceImpl implements PersonService {
         Predicate<Person> predicate = p -> p.getLastName().equals(lastName);
         if (StringUtils.isNotBlank(firstName)) {
             predicate = predicate.and(p -> p.getFirstName().equals(firstName));
+            log.info("Ask infos for {} {}", firstName, lastName);
+        } else {
+            log.info("Ask infos for {} family", lastName);
         }
 
         List<Person> persons = personRepository.getAll()

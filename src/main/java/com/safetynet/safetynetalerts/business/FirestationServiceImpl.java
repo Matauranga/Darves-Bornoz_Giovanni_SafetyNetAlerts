@@ -171,26 +171,9 @@ public class FirestationServiceImpl implements FirestationService {
                 .map(this::getInfosPersonForFloodAlertDTO)
                 .toList();
 
-        List<FloodAlertDTO> floodAlertDTO = firestationAddresses.stream()
+        return firestationAddresses.stream()
                 .map(address -> getFloodAlertDTO(infosPersonsForFloodAlertByAddress, address))
                 .toList();
-/*
-
-        List<FloodAlertDTO> floodAlertDTO = firestationAddresses.stream()
-                .map(address -> {
-                    List<InfosPersonForFloodAlertDTO> personLivingAtAddress = personRepository.getAll()
-                            .stream()
-                            .filter(p -> address.equals(p.getAddress()))
-                            .map(person -> {
-                                var medicalRecord = medicalRecordService.getMedicalRecordById(person.getId());
-                                return new InfosPersonForFloodAlertDTO(person, medicalRecord);
-                            })
-                            .toList();
-                    return new FloodAlertDTO(address, personLivingAtAddress);
-                })
-                .toList();
-*/
-        return floodAlertDTO;
     }
 
     private InfosPersonForFloodAlertDTO getInfosPersonForFloodAlertDTO(Person person) {
@@ -204,6 +187,4 @@ public class FirestationServiceImpl implements FirestationService {
                 .toList();
         return new FloodAlertDTO(address, infosPersonForFireAlertDTOS);
     }
-
-
 }

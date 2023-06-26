@@ -5,6 +5,7 @@ import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.repository.DataStorage;
 import com.safetynet.safetynetalerts.repository.MedicalRecordRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  *
  */
+@Log4j2
 @Service
 public class MedicalRecordServiceImpl implements MedicalRecordService {
 
@@ -33,7 +35,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
      * @return the medical record search
      */
     public MedicalRecord getMedicalRecordById(String id) {
-
+        log.debug("Try to get MedicalRecord of {}", id);
         List<MedicalRecord> medicalRecords = dataStorage.getMedicalRecords();
         return medicalRecords
                 .stream()
