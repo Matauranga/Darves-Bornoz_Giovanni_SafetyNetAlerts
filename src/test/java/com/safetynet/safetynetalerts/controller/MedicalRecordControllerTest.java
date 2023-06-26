@@ -12,9 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.assertj.core.util.Lists.list;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -25,7 +23,8 @@ public class MedicalRecordControllerTest {
     private MockMvc mockMvc;
 
 
-    @Test
+   /* @Test
+    @Disabled//Methode supprimée
     @DisplayName("Test de la methode GET")
     public void getListMedicalRecordTest() throws Exception {
         mockMvc.perform(get(urlEndpointMedicalRecord))
@@ -33,7 +32,7 @@ public class MedicalRecordControllerTest {
                 .andExpect(content().string(containsString("Stelzer")))
                 .andExpect(content().string(containsString("Marrack")));
 
-    }
+    }*/
 
     @Test
     @DisplayName("Test de la methode POST")

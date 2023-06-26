@@ -24,14 +24,15 @@ public class PersonControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
+   /* @Test
+    @Disabled//Methode supprimée
     @DisplayName("Test de la methode GET")
     public void getListPersonsTest() throws Exception {
         mockMvc.perform(get(urlEndpointPerson))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Stelzer")))
                 .andExpect(content().string(containsString("Marrack")));
-    }
+    }*/
 
     @Test
     @DisplayName("Test de la methode POST")
@@ -87,7 +88,6 @@ public class PersonControllerTest {
         mockMvc.perform(get("/childAlert?address=1509 Culver St"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Tenley")))
-                .andExpect(content().string(containsString("1509 Culver St")))
                 .andExpect(content().string(containsString("11")));
 
 

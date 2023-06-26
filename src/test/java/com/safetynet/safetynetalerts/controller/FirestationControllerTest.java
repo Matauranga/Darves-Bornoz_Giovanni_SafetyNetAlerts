@@ -23,17 +23,15 @@ public class FirestationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
+   /* @Test
+    @Disabled//Methode supprimée
     @DisplayName("Test de la methode GET")
     public void getListFirestationTest() throws Exception {
         mockMvc.perform(get("/allfirestation"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("1509 Culver St")))
                 .andExpect(content().string(containsString("947 E. Rose Dr")));
-
-
-
-    }
+    }*/
 
     @Test
     @DisplayName("Test de la mathode POST")
@@ -47,7 +45,6 @@ public class FirestationControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.address").value("123 Mayol"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.station").value(10));
-
     }
 
     @Test
@@ -62,8 +59,6 @@ public class FirestationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.address").value("947 E. Rose Dr"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.station").value(10));
-
-
     }
 
     @Test
@@ -76,7 +71,6 @@ public class FirestationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
-
     }
 
     @Test
@@ -87,7 +81,6 @@ public class FirestationControllerTest {
                 .andExpect(content().string(containsString("841-874-6512")))
                 .andExpect(content().string(containsString("841-874-7462")))
                 .andExpect(content().string(containsString("841-874-7784")));
-
     }
 
     @Test
@@ -101,7 +94,6 @@ public class FirestationControllerTest {
                 .andExpect(content().string(containsString("Peter")))
                 .andExpect(content().string(containsString("908 73rd St")))
                 .andExpect(content().string(containsString("841-874-7784")));
-
     }
 
     @Test
@@ -109,11 +101,9 @@ public class FirestationControllerTest {
     void fireAlertAtAddressTest() throws Exception {
         mockMvc.perform(get("/fire?address=1509 Culver St"))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firestationToCall").value("3"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firestationServingIt").value("3"))
                 .andExpect(content().string(containsString("aznol:350mg")))
                 .andExpect(content().string(containsString("Felicia")));
-
-
     }
 
     @Test
