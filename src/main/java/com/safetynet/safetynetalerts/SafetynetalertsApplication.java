@@ -11,5 +11,4 @@ public class SafetynetalertsApplication {
         SpringApplication.run(SafetynetalertsApplication.class, args);
 
     }
-
 }

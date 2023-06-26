@@ -5,7 +5,6 @@ import com.safetynet.safetynetalerts.DTO.ChildDTO;
 import com.safetynet.safetynetalerts.exceptions.PersonNotFoundException;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
-import com.safetynet.safetynetalerts.repository.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repository.PersonRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -30,8 +29,6 @@ public class PersonServiceImpl implements PersonService {
     private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @Autowired
     PersonRepository personRepository;
-    @Autowired
-    MedicalRecordRepository medicalRecordRepository;
     @Autowired
     MedicalRecordService medicalRecordService;
 

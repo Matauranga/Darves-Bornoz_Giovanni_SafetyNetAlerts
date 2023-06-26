@@ -34,7 +34,7 @@ public class FirestationControllerTest {
     }*/
 
     @Test
-    @DisplayName("Test de la mathode POST")
+    @DisplayName("Test de la methode POST")
     public void createFirestationTest() throws Exception {
         Firestation createdFirestationTest = new Firestation("123 Mayol", 10);
 
@@ -101,7 +101,7 @@ public class FirestationControllerTest {
     void fireAlertAtAddressTest() throws Exception {
         mockMvc.perform(get("/fire?address=1509 Culver St"))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firestationServingIt").value("3"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firestationServingThem").value("3"))
                 .andExpect(content().string(containsString("aznol:350mg")))
                 .andExpect(content().string(containsString("Felicia")));
     }

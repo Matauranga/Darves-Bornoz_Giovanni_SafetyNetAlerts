@@ -1,5 +1,7 @@
 package com.safetynet.safetynetalerts.business;
 
+import com.safetynet.safetynetalerts.exceptions.MedicalRecordNotFoundException;
+import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.repository.DataStorage;
 import com.safetynet.safetynetalerts.repository.MedicalRecordRepository;
@@ -30,70 +32,97 @@ class MedicalRecordServiceImplTest {
     void getAllMedicalRecordsTest() {
         //Given
 
-        //When
+        //When we search all medical records
         medicalRecordServiceImpl.getAllMedicalRecords();
 
-        //Then
+        //Then we verify if this have works correctly
         verify(medicalRecordRepository, times(1)).getAll();
     }
 
     @Test
     @DisplayName("Test de getMedicalRecordById")
     void getMedicalRecordByIdTest() {
-        //Given
+        //Given an initial list of medical records
         List<MedicalRecord> listMedicalRecords = new ArrayList<>();
         MedicalRecord medicalRecordTest = new MedicalRecord("Mike", "Big", null, null, null);
         listMedicalRecords.add(medicalRecordTest);
 
-        //When
+        //When we search this medical record
         when(dataStorage.getMedicalRecords()).thenReturn(listMedicalRecords);
         MedicalRecord response = medicalRecordServiceImpl.getMedicalRecordById("Mike-Big");
 
-        //Then
+        //Then we verify if we have the good medical record
         assertThat(response).isEqualTo(medicalRecordTest);
+    }
+
+    @Test
+    @DisplayName("test de getMedicalRecordById throwing NotFoundException")
+    void getMedicalRecordByIdThrowingNotFoundExceptionTest() {
+        //Given
+
+        //When we send the request
+        try {
+            medicalRecordServiceImpl.getMedicalRecordById("Jean-Valjean");
+        } catch (NotFoundException NotFoundException) {
+            //Then we verify the message passed
+            assertThat(NotFoundException.getMessage()).contains("Jean-Valjean");
+        }
     }
 
     @Test
     @DisplayName("Test de createMedicalRecord")
     void createMedicalRecordTest() {
-        //Given
+        //Given a new medical record
         MedicalRecord medicalRecordTest = new MedicalRecord("Mike", "Big", null, null, null);
 
-        //When
+        //When we create it
         medicalRecordServiceImpl.createMedicalRecord(medicalRecordTest);
 
-        //Then
+        //Then we verify if this have works correctly
         verify(medicalRecordRepository, times(1)).saveOrUpdate(any());
     }
 
     @Test
     @DisplayName("Test de updateMedicalRecord")
     void updateMedicalRecordTest() {
-        //Given
-        List<MedicalRecord> response = new ArrayList<>();
+        //Given a medical record and new value for this medical record
         MedicalRecord medicalRecordTest = new MedicalRecord("Mike", "Big", null, null, null);
-        response.add(medicalRecordTest);
         MedicalRecord newValueOfMedicalRecordTest = new MedicalRecord("Mike", "Big", "10/10/1000", null, null);
 
-        //When
-        when(medicalRecordRepository.getAll()).thenReturn(response);
+        //When we update the medical record
+        when(medicalRecordRepository.getAll()).thenReturn(new ArrayList<>(List.of(medicalRecordTest)));
         medicalRecordServiceImpl.updateMedicalRecord(newValueOfMedicalRecordTest);
 
-        //Then
+        //Then we verify the new values of medical record
         verify(medicalRecordRepository, times(1)).getAll();
         assertThat(medicalRecordTest.getBirthdate()).isEqualTo(newValueOfMedicalRecordTest.getBirthdate());
     }
 
     @Test
+    @DisplayName("test de updateMedicalRecord throwing MedicalRecordNotFoundException")
+    void updateMedicalRecordThrowingMedicalRecordNotFoundExceptionTest() {
+        //Given an initial medical record
+        MedicalRecord medicalRecord = new MedicalRecord("Jean", "Valjean", null, null, null);
+
+        //When we send the request
+        try {
+            medicalRecordServiceImpl.updateMedicalRecord(medicalRecord);
+        } catch (MedicalRecordNotFoundException MedRecNotFound) {
+            //Then we verify the message passed
+            assertThat(MedRecNotFound.getMessage()).contains("Jean-Valjean");
+        }
+    }
+
+    @Test
     @DisplayName("Test de deleteMedicalRecord")
     void deleteMedicalRecordTest() {
-        //Given
+        //Given an initial medical record
         MedicalRecord medicalRecordTest = new MedicalRecord("Mike", "Big", null, null, null);
 
-        //When
+        //When we delete it
         medicalRecordServiceImpl.deleteMedicalRecord(medicalRecordTest);
 
-        //Then
+        //Then we verify if this have works correctly
         verify(medicalRecordRepository, times(1)).delete(any());
     }
 }

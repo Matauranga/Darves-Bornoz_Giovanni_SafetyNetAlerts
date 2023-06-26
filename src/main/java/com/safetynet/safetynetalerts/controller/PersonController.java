@@ -30,7 +30,6 @@ public class PersonController {
     public ResponseEntity<Person> createPerson(@Valid @RequestBody Person person) {
         log.info("Ask to create person : {}", person.getId());
         personService.createPerson(person);
-        log.info("Person created.");
         return new ResponseEntity<>(person, HttpStatus.CREATED);
     }
 
@@ -38,7 +37,6 @@ public class PersonController {
     public ResponseEntity<Person> updatePerson(@Valid @RequestBody Person person) {
         log.info("Ask to update person : {}", person.getId());
         personService.updatePerson(person);
-        log.info("Person updated.");
         return new ResponseEntity<>(person, HttpStatus.OK);
     }
 
@@ -46,29 +44,22 @@ public class PersonController {
     public ResponseEntity<HttpStatus> deletePerson(@Valid @RequestBody Person person) {
         log.info("Ask to delete person : {}", person.getId());
         personService.deletePerson(person);
-        log.info("Person deleted.");
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/childAlert")
-    public List<ChildDTO> childAlertByAddress(@RequestParam String address) {//TODO ça se fait ?
-        log.info("Triggering of child alert at {}", address);
-        if (!personService.childAlert(address).isEmpty()) {
-            log.info("Infos returned.");
-        }
+    public List<ChildDTO> childAlertByAddress(@RequestParam String address) {
         return personService.childAlert(address);
     }
 
     @GetMapping("/personInfo")
     public List<AllInfosPersonDTO> personInfosByID(@RequestParam(required = true) String lastName,
                                                    @RequestParam(required = false) String firstName) {
-        List<AllInfosPersonDTO> infosPersons = personService.getInfosPersonByID(lastName, firstName);
-        return infosPersons;
+        return personService.getInfosPersonByID(lastName, firstName);
     }
 
     @GetMapping("/communityEmail")
     public Set<String> emailByCity(@RequestParam String city) {
-        log.info("Request of all email in {}.", city);
         return personService.getEmailByCity(city);
     }
 }

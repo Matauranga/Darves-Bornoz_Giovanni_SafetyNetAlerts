@@ -1,14 +1,12 @@
 package com.safetynet.safetynetalerts.business;
 
+import com.safetynet.safetynetalerts.DTO.AllInfosPersonDTO;
 import com.safetynet.safetynetalerts.DTO.ChildDTO;
+import com.safetynet.safetynetalerts.exceptions.PersonNotFoundException;
 import com.safetynet.safetynetalerts.model.Firestation;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
-import com.safetynet.safetynetalerts.repository.DataStorage;
-import com.safetynet.safetynetalerts.repository.FirestationRepository;
-import com.safetynet.safetynetalerts.repository.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repository.PersonRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,23 +16,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Lists.list;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class PersonServiceImplTest {
     @InjectMocks
     PersonServiceImpl personServiceImpl;
-    @Mock
-    DataStorage dataStorage;
+
     @Mock
     PersonRepository personRepository;
-    @Mock
-    FirestationRepository firestationRepository;
-    @Mock
-    MedicalRecordRepository medicalRecordRepository;
     @Mock
     MedicalRecordService medicalRecordService;
 
@@ -58,43 +54,20 @@ class PersonServiceImplTest {
 
         List<MedicalRecord> medicalRecords = List.of(medicalRecord1, medicalRecord2, medicalRecord3);
 
-        when(medicalRecordRepository.getAll()).thenReturn(medicalRecords);
+        when(medicalRecordService.getAllMedicalRecords()).thenReturn(medicalRecords);
 
         return medicalRecords;
-
     }
 
     private List<Firestation> initListFirestations() {
-        List<Firestation> firestations = List.of(new Firestation("123 Mayol", 45));
-        when(firestationRepository.getAll()).thenReturn(firestations);
 
-        return firestations;
+        return List.of(new Firestation("123 Mayol", 45));
     }
 
     private void initExistingPersonsMedicalRecordsAndFirestation() {
-
         initListPersons();
         initListMedicalRecords();
         initListFirestations();
-
-    }
-
-    //TODO : test sur optional
-    @Disabled
-    @Test
-    @DisplayName("test de getPersonById")
-    void getPersonByIdTest() {
-        //Given
-        List<Person> listPersons = new ArrayList<>();
-        Person personTest = new Person("Chuck", "Norris", null, null, null, null, null);
-        listPersons.add(personTest);
-
-        //When
-        when(dataStorage.getPersons()).thenReturn(listPersons);
-        Optional<Person> response = personServiceImpl.getPersonById("Chuck-Norris");
-
-        //Then
-        assertThat(response).isEqualTo(personTest);
     }
 
     @Test
@@ -102,24 +75,38 @@ class PersonServiceImplTest {
     void getAllPersonsTest() {
         //Given
 
-        //When
+        //When we search all persons
         personServiceImpl.getAllPersons();
 
-        //Then
+        //Then we verify if this have works correctly
         verify(personRepository, times(1)).getAll();
+    }
 
+    @Test
+    @DisplayName("test de getPersonById")
+    void getPersonByIdTest() {
+        //Given an initial list of persons
+        Person personTest = new Person("Chuck", "Norris", null, null, null, null, null);
+
+        //When we search this person
+        when(personRepository.getById(personTest.getId())).thenReturn(Optional.of(personTest));
+        Optional<Person> response = personServiceImpl.getPersonById(personTest.getId());
+
+        //Then we verify if we have the good person
+        assertTrue(response.isPresent());
+        assertEquals(personTest, response.get());
     }
 
     @Test
     @DisplayName("test de createPerson")
     void createPersonTest() {
-        //Given
+        //Given a new person
         Person personTest = new Person("Chuck", "Norris", null, null, null, null, null);
 
-        //When
+        //When we create it
         personServiceImpl.createPerson(personTest);
 
-        //Then
+        //Then we verify if this have works correctly
         verify(personRepository, times(1)).saveOrUpdate(any());
 
     }
@@ -127,121 +114,144 @@ class PersonServiceImplTest {
     @Test
     @DisplayName("test de updatePerson")
     void updatePersonTest() {
-        //Given
+        //Given a person and new value for this person
         List<Person> listPersons = new ArrayList<>();
         Person personTest = new Person("Chuck", "Norris", null, null, null, null, null);
         listPersons.add(personTest);
         Person newValueOfPersonTest = new Person("Chuck", "Norris", "Texas Rangers", null, null, null, null);
 
-        //When
+        //When we update the person
         when(personRepository.getAll()).thenReturn(listPersons);
         personServiceImpl.updatePerson(newValueOfPersonTest);
 
-        //Then
+        //Then we verify the new values of person
         verify(personRepository, times(1)).getAll();
-        //verify(personRepository, times(1)).saveOrUpdate(any());
         assertThat(personTest.getAddress()).isEqualTo(newValueOfPersonTest.getAddress());
+    }
 
+    @Test
+    @DisplayName("test de updatePerson throwing PersonNotFoundException")
+    void updatePersonThrowingPersonNotFoundExceptionTest() {
+        //Given an initial medical record
+        Person person = new Person("Jean", "DeLaFontaine", null, null, null, null, null);
 
+        //When we send the request
+        try {
+            personServiceImpl.updatePerson(person);
+        } catch (PersonNotFoundException PerNotFound) {
+            //Then we verify the message passed
+            assertThat(PerNotFound.getMessage()).contains("Jean-DeLaFontaine");
+        }
     }
 
     @Test
     @DisplayName("test de deletePerson")
     void deletePersonTest() {
-        //Given
+        //Given an initial person
         Person personTest = new Person("Chuck", "Norris", null, null, null, null, null);
 
-        //When
+        //When we delete it
         personServiceImpl.deletePerson(personTest);
 
-        //Then
+        //Then we verify if this have works correctly
         verify(personRepository, times(1)).delete(any());
-
     }
 
-
-    //TODO : finir les tests
     @Test
     @DisplayName("test de getPersonsAtAddress")
     void getPersonsAtAddressTest() {
-        //Given
+        //Given initial list of person and an expected person
         initListPersons();
+        Person expectedPerson = new Person("Gio", "gio", "123 Mayol", "Toulon", "101010", "000-111-2222", "rougeetnoir@email.com");
 
-        //When
+        //When we search persons at an address
         List<Person> response = personServiceImpl.getPersonsAtAddress("123 Mayol");
 
-        //Then
+        //Then we verify if this have works correctly and
         verify(personRepository, times(1)).getAll();
-        assertThat(response).isNotEmpty();
-
+        assertThat(response).contains(expectedPerson);
     }
 
     @Test
     @DisplayName("test de getChildByAddress")
     void getChildByAddressTest() {
-        //Given
+        //Given initials lists of persons, medical records and firestation
         List<Person> persons = initListPersons();
         List<MedicalRecord> medicalRecords = initListMedicalRecords();
         initExistingPersonsMedicalRecordsAndFirestation();
+        Person expectedChild = new Person("AGio", "gio", null, null, null, null, null);
 
-        //When
+        //When search child at an address
         when(medicalRecordService.getMedicalRecordById(persons.get(0).getId())).thenReturn(medicalRecords.get(0));
         when(medicalRecordService.getMedicalRecordById(persons.get(1).getId())).thenReturn(medicalRecords.get(1));
         when(medicalRecordService.getMedicalRecordById(persons.get(2).getId())).thenReturn(medicalRecords.get(2));
         List<ChildDTO> response = personServiceImpl.childAlert("123 Mayol");
 
-        //Then
-        assertThat(response).isNotEmpty();
-
+        //Then we verify if the response contains the child expected
+        assertThat(response.get(0).getFirstName()).isEqualTo(expectedChild.getFirstName());
     }
 
     @Test
     @DisplayName("test de getEmailByCity")
     void getEmailByCityTest() {
-        //Given
+        //Given initial list of person (that contains emails)
         initListPersons();
 
-        //When
-        List<String> response = personServiceImpl.getEmailByCity("Toulon");
+        //When we search email by city
+        Set<String> response = personServiceImpl.getEmailByCity("Toulon");
 
-        //Then
+        //Then we verify if we have the 3 emails
         assertThat(response).contains("redandblack@email.com", "rougeetnoir@email.com", "noiretrouge@email.com");
-
     }
 
     @Test
     @DisplayName("test de getInfosPersonByID without first name")
     void getInfosPersonByIDWithoutFirstNameTest() {
-        //Given
+        //Given initial lists of persons, medical records
         List<Person> persons = initListPersons();
         List<MedicalRecord> medicalRecords = initListMedicalRecords();
         initExistingPersonsMedicalRecordsAndFirestation();
 
-        //When
+        //When we search infos by lastName only
         when(medicalRecordService.getMedicalRecordById(persons.get(0).getId())).thenReturn(medicalRecords.get(0));
         when(medicalRecordService.getMedicalRecordById(persons.get(1).getId())).thenReturn(medicalRecords.get(1));
         when(medicalRecordService.getMedicalRecordById(persons.get(2).getId())).thenReturn(medicalRecords.get(2));
-        //List<InfosPersonForFireAlertDTO> response = personServiceImpl.getInfosPersonByID("gio", null);
+        List<AllInfosPersonDTO> response = personServiceImpl.getInfosPersonByID("gio", null);
 
-        //Then
-        // assertThat(response.size()).isEqualTo(3);
+        //Then we verify if the response contains 3 persons
+        assertThat(response.size()).isEqualTo(3);
     }
 
     @Test
     @DisplayName("test de getInfosPersonByID with first name")
     void getInfosPersonByIDWithFirstNameTest() {
-        //Given
+        //Given initial lists of persons, medical records
         List<Person> persons = initListPersons();
         List<MedicalRecord> medicalRecords = initListMedicalRecords();
         initExistingPersonsMedicalRecordsAndFirestation();
 
-        //When
+        //When we search infos by lastName and firstName
         when(medicalRecordService.getMedicalRecordById(persons.get(0).getId())).thenReturn(medicalRecords.get(0));
         when(medicalRecordService.getMedicalRecordById(persons.get(1).getId())).thenReturn(medicalRecords.get(1));
         when(medicalRecordService.getMedicalRecordById(persons.get(2).getId())).thenReturn(medicalRecords.get(2));
-        // List<InfosPersonForFireAlertDTO> response = personServiceImpl.getInfosPersonByID("gio", "Gio");
+        List<AllInfosPersonDTO> response = personServiceImpl.getInfosPersonByID("gio", "Gio");
 
-        //Then
-        //assertThat(response.size()).isEqualTo(1);
+        //Then we verify if the response contains 1 person and the good one
+        assertThat(response.size()).isEqualTo(1);
+        assertThat(response.get(0).getFirstName()).isEqualTo("Gio");
+    }
+
+    @Test
+    @DisplayName("test de getInfosPersonByID throwing IllegalArgumentException")
+    void getInfosPersonByIDWithOutLastNameTest() {
+        //Given
+
+        //When we search without lastName
+        try {
+            personServiceImpl.getInfosPersonByID(null, "Gio");
+        } catch (IllegalArgumentException IArEx) {
+            //Then we verify the message passed
+            assertThat(IArEx.getMessage()).contains("LastName can't be null, empty or blank");
+        }
     }
 }

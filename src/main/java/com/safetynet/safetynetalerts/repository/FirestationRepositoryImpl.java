@@ -60,8 +60,6 @@ public class FirestationRepositoryImpl implements FirestationRepository {
         return entity;
     }
 
-    //TODO : return infos sur le delete (code d'erreur ou de réussite)?
-
     /**
      * @param id the id of firestation to delete.
      */

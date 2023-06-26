@@ -1,11 +1,11 @@
 package com.safetynet.safetynetalerts.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
 import lombok.Getter;
 
 import java.util.List;
-
 
 @Getter
 public class InfosPersonForFloodAlertDTO {
@@ -13,14 +13,11 @@ public class InfosPersonForFloodAlertDTO {
     private final String firstName;
     private final String lastName;
     private final String phone;
-
     private final Integer age;
     private final List<String> medications;
     private final List<String> allergies;
-
-    //TODO: address à enlever
+    @JsonIgnore
     private final String address;
-
 
     public InfosPersonForFloodAlertDTO(Person person, MedicalRecord medicalRecord) {
         this.firstName = person.getFirstName();
@@ -32,15 +29,6 @@ public class InfosPersonForFloodAlertDTO {
         this.address = person.getAddress();
 
     }
-
-   /* public String getTheAddress(String firstName, String lastName) {
-
-        String id = firstName + "-" + lastName;
-
-
-        return person.getAddress();
-    }*/
-
 }
 
 

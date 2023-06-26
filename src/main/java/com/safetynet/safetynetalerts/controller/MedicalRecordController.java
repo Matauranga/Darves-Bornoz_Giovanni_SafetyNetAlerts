@@ -24,7 +24,6 @@ public class MedicalRecordController {
     public ResponseEntity<MedicalRecord> createMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
         log.info("Ask to create medical record : {}", medicalRecord.getId());
         medicalRecordService.createMedicalRecord(medicalRecord);
-        log.info("Medical record created.");
         return new ResponseEntity<>(medicalRecord, HttpStatus.CREATED);
     }
 
@@ -32,7 +31,6 @@ public class MedicalRecordController {
     public ResponseEntity<MedicalRecord> updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
         log.info("Ask to modify medical record : {}", medicalRecord.getId());
         medicalRecordService.updateMedicalRecord(medicalRecord);
-        log.info("Medical record updated.");
         return new ResponseEntity<>(medicalRecord, HttpStatus.OK);
     }
 
@@ -40,7 +38,6 @@ public class MedicalRecordController {
     public ResponseEntity<HttpStatus> deleteMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
         log.info("Ask to delete medical record : {}", medicalRecord.getId());
         medicalRecordService.deleteMedicalRecord(medicalRecord);
-        log.info("Medical record deleted.");
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
