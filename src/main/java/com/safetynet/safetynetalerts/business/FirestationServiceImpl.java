@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
+
 /**
  *
  */
@@ -157,13 +159,11 @@ public class FirestationServiceImpl implements FirestationService {
      */
     public List<FloodAlertDTO> getHouseholdServedByFirestation(Set<Integer> stations) {
 
-
         List<String> firestationAddresses = firestationRepository.getAll()
                 .stream()
                 .filter(p -> stations.contains(p.getStation()))
                 .map(Firestation::getAddress)
                 .toList();
-
 
         List<InfosPersonForFloodAlertDTO> infosPersonsForFloodAlertByAddress = personRepository.getAll()
                 .stream()
@@ -171,20 +171,17 @@ public class FirestationServiceImpl implements FirestationService {
                 .map(this::getInfosPersonForFloodAlertDTO)
                 .toList();
 
-        return firestationAddresses.stream()
-                .map(address -> getFloodAlertDTO(infosPersonsForFloodAlertByAddress, address))
+        return infosPersonsForFloodAlertByAddress
+                .stream()
+                .collect(groupingBy(InfosPersonForFloodAlertDTO::getAddress))
+                .entrySet()
+                .stream()
+                .map(e -> new FloodAlertDTO(e.getKey(), e.getValue()))
                 .toList();
     }
 
     private InfosPersonForFloodAlertDTO getInfosPersonForFloodAlertDTO(Person person) {
         var medicalRecord = medicalRecordService.getMedicalRecordById(person.getId());
         return new InfosPersonForFloodAlertDTO(person, medicalRecord);
-    }
-
-    private static FloodAlertDTO getFloodAlertDTO(List<InfosPersonForFloodAlertDTO> infosPersonsForFloodAlertByAddress, String address) {
-        List<InfosPersonForFloodAlertDTO> infosPersonForFireAlertDTOS = infosPersonsForFloodAlertByAddress.stream()
-                .filter(p -> p.getAddress().equals(address))
-                .toList();
-        return new FloodAlertDTO(address, infosPersonForFireAlertDTOS);
     }
 }
