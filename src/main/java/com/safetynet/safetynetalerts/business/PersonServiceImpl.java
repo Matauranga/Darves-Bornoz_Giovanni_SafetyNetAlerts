@@ -6,9 +6,8 @@ import com.safetynet.safetynetalerts.exceptions.PersonNotFoundException;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.repository.PersonRepository;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +22,9 @@ import static java.util.stream.Collectors.toList;
 /**
  *
  */
-
+@Log4j2
 @Service
 public class PersonServiceImpl implements PersonService {
-    private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @Autowired
     PersonRepository personRepository;
     @Autowired
@@ -95,8 +93,10 @@ public class PersonServiceImpl implements PersonService {
      * @return child list's present, with their first and last name, age and a list of who lives with them.
      */
     public List<ChildDTO> childAlert(String address) {
-        //log.info
         List<Person> listPersonsAtTheAddress = getPersonsAtAddress(address);
+        if (listPersonsAtTheAddress.isEmpty()) {
+            log.error("Address not found");
+        }
         List<MedicalRecord> medicalRecords = listPersonsAtTheAddress
                 .stream()
                 .map(p -> medicalRecordService.getMedicalRecordById(p.getId()))

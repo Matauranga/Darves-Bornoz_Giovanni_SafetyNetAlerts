@@ -7,6 +7,7 @@ import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.repository.FirestationRepository;
 import com.safetynet.safetynetalerts.repository.PersonRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import static java.util.stream.Collectors.groupingBy;
 /**
  *
  */
+@Log4j2
 @Service
 public class FirestationServiceImpl implements FirestationService {
     @Autowired
@@ -72,19 +74,24 @@ public class FirestationServiceImpl implements FirestationService {
      * @param firestationNumber firestation number.
      * @return List of persons(Object) cover by the firestation put in @param.
      */
-    public List<Person> getPersonsCoverByFirestation(Integer firestationNumber) { //dans personService ?
+    public List<Person> getPersonsCoverByFirestation(Integer firestationNumber) {
 
         List<Person> listPersonsCoverByStation = new ArrayList<>();
         List<Firestation> addressServedByFirestation = firestationRepository.getAll()
                 .stream()
                 .filter(p -> p.getStation().equals(firestationNumber))
                 .toList();
-        //log.debug
+        if (addressServedByFirestation.isEmpty()) {
+            log.error("firestation not found");
+        }
         for (Firestation firestation : addressServedByFirestation) {
             listPersonsCoverByStation.addAll(personRepository.getAll()
                     .stream()
                     .filter(p -> p.getAddress().equals(firestation.getAddress()))
                     .toList());
+        }
+        if (!listPersonsCoverByStation.isEmpty()) {
+            log.debug("List persons cover by the firestation returned with element");
         }
 
         return listPersonsCoverByStation;
@@ -164,6 +171,9 @@ public class FirestationServiceImpl implements FirestationService {
                 .filter(p -> stations.contains(p.getStation()))
                 .map(Firestation::getAddress)
                 .toList();
+        if (firestationAddresses.isEmpty()) {
+            log.error("No address for these firestation(s) number(s)");
+        }
 
         List<InfosPersonForFloodAlertDTO> infosPersonsForFloodAlertByAddress = personRepository.getAll()
                 .stream()

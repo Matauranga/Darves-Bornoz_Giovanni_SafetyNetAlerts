@@ -52,12 +52,14 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
 
         var medicalRecordEntity = getById(entity.getId());
 
-        if (medicalRecordEntity.isPresent()) {
+        if (medicalRecordEntity.isPresent()) {//To be modified with dialog box asking you to confirm ?
+            log.debug("Medical record already present, updated data ");
             int index = dataStorage.getMedicalRecords().indexOf(medicalRecordEntity.get());
             dataStorage.getMedicalRecords()
                     .set(index, entity);
         } else {
             dataStorage.getMedicalRecords().add(entity);
+            log.debug("Medical record created");
         }
 
         return entity;
@@ -74,6 +76,7 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
                 .findFirst().orElse(null);
         if (medicalRecordToDelete != null) {
             dataStorage.getMedicalRecords().remove(medicalRecordToDelete);
+            log.debug("Medical record deleted");
         } else {
             log.error("Medical record not found", new NotFoundException(MedicalRecord.class, id));
         }

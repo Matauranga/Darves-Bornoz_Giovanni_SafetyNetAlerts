@@ -5,7 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,6 +34,7 @@ public class Person implements Entity<Person> {
         this.zip = update.getZip();
         this.phone = update.getPhone();
         this.email = update.getEmail();
+        log.debug("Person updated");
         return this;
     }
 }

@@ -32,11 +32,13 @@ public class FirestationRepositoryImpl implements FirestationRepository {
      */
     @Override
     public Optional<Firestation> getById(String id) {
+        log.debug("Looking for the firestation serving the : {}", id);
+
         Optional<Firestation> firestation = dataStorage.getFirestations().stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
         if (firestation.isEmpty()) {
-            log.error("Firestation doesn't exist");
+            log.error("Firestation doesn't exist", new NotFoundException(Firestation.class, id));
         }
         return firestation;
     }
@@ -50,12 +52,14 @@ public class FirestationRepositoryImpl implements FirestationRepository {
 
         var entityFirestation = getById(entity.getId());
 
-        if (entityFirestation.isPresent()) {
+        if (entityFirestation.isPresent()) { //To be modified with dialog box asking you to confirm ?
+            log.debug("Person already present, updated data ");
             int index = dataStorage.getFirestations().indexOf(entityFirestation.get());
             dataStorage.getFirestations()
                     .set(index, entity);
         } else {
             dataStorage.getFirestations().add(entity);
+            log.debug("Firestation created");
         }
         return entity;
     }
@@ -71,6 +75,7 @@ public class FirestationRepositoryImpl implements FirestationRepository {
                 .findFirst().orElse(null);
         if (firestationToDelete != null) {
             dataStorage.getFirestations().remove(firestationToDelete);
+            log.debug("Firestation deleted");
         } else {
             log.error("Firestation not found", new NotFoundException(Firestation.class, id));
         }

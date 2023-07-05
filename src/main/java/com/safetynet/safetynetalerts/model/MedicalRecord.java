@@ -4,8 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -13,11 +12,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MedicalRecord implements Entity<MedicalRecord> {
-    private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @NotBlank(message = "firstName can not be null, empty or blank")
     private String firstName;
     @NotBlank(message = "lastName can not be null, empty or blank")
@@ -34,6 +33,7 @@ public class MedicalRecord implements Entity<MedicalRecord> {
         this.birthdate = update.getBirthdate();
         this.medications = update.getMedications();
         this.allergies = update.getAllergies();
+        log.debug("Medical record updated");
         return this;
     }
 
@@ -45,7 +45,7 @@ public class MedicalRecord implements Entity<MedicalRecord> {
         return Period.between(birthDay, LocalDate.now()).getYears();
     }
 
-    public boolean isMinor(){
+    public boolean isMinor() {
         return getAge() <= 18;
     }
 

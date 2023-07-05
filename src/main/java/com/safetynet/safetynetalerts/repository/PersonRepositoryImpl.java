@@ -2,8 +2,7 @@ package com.safetynet.safetynetalerts.repository;
 
 import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.Person;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +12,9 @@ import java.util.Optional;
 /**
  *
  */
+@Log4j2
 @Service
 public class PersonRepositoryImpl implements PersonRepository {
-    private static final Logger log = LogManager.getLogger("SafetyNet Alerts");
     @Autowired
     private DataStorage dataStorage;
 
@@ -33,6 +32,7 @@ public class PersonRepositoryImpl implements PersonRepository {
      */
     @Override
     public Optional<Person> getById(String id) {
+        log.debug("Looking for {}", id);
 
         Optional<Person> person = dataStorage.getPersons().stream()
                 .filter(p -> p.getId().equals(id))
@@ -49,13 +49,17 @@ public class PersonRepositoryImpl implements PersonRepository {
      */
     @Override
     public Person saveOrUpdate(Person entity) {
+
         var personEntity = getById(entity.getId());
-        if (personEntity.isPresent()) {
+
+        if (personEntity.isPresent()) {//To be modified with dialog box asking you to confirm ?
+            log.debug("Person already present, updated data ");
             int index = dataStorage.getPersons().indexOf(personEntity.get());
             dataStorage.getPersons()
                     .set(index, entity);
         } else {
             dataStorage.getPersons().add(entity);
+            log.debug("Person created");
         }
         return entity;
     }
@@ -72,6 +76,7 @@ public class PersonRepositoryImpl implements PersonRepository {
                 .orElse(null);
         if (personToDelete != null) {
             dataStorage.getPersons().remove(personToDelete);
+            log.debug("Person deleted");
         } else {
             log.error("Person not found", new NotFoundException(Person.class, id));
         }

@@ -40,7 +40,9 @@ public class MedicalRecordRepositoryImplTest {
     void getByIdTest() {
         //Given an id and a medical record corresponding
         final String id = "Paul-Machin";
-        final MedicalRecord expectedMedicalRecord = new MedicalRecord("Paul", "Machin", null, null, null);
+        final MedicalRecord expectedMedicalRecord = new MedicalRecord("Paul", "Machin", null,
+                list((String) null),
+                list((String) null));
 
         //When we search this medical record
         when(dataStorage.getMedicalRecords()).thenReturn(List.of(expectedMedicalRecord));
