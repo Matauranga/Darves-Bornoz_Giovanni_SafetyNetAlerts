@@ -101,7 +101,7 @@ http://localhost:8080/communityEmail?city={city}
 * INFO : http://localhost:8080/actuator/info
 * HEALTH : http://localhost:8080/actuator/health
 * METRICS : http://localhost:8080/actuator/metrics
-* HTTP exchange : http://localhost:8080/actuator/httptrace
+* HTTP exchange : http://localhost:8080/actuator/httpexchanges
 
 
 
