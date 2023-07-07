@@ -43,24 +43,32 @@ Exemple for persons :
 
 ### Return a list persons covered by Firestation :
 http://localhost:8080/firestation?stationNumber={station_number}
+* Ex : http://localhost:8080/firestation?stationNumber=1
 
 ### Return list of child(s) living at the address :
 http://localhost:8080/childAlert?address={address}
+* Ex : http://localhost:8080/childAlert?address=1509%20Culver%20St
 
 ### Return list of phone number for persons covered by the Firestation :
 http://localhost:8080/phoneAlert?firestation={firestation_number}
+* Ex : http://localhost:8080/phoneAlert?firestation=2
 
 ### Return list of persons covered by the firestation :
 http://localhost:8080/fire?address={address}
+* Ex : http://localhost:8080/fire?address=947%20E.%20Rose%20Dr
 
 ### Return list of households covered by firestation(s) :
 http://localhost:8080/flood/stations?stations={list_of_station_numbers}
+* Ex : http://localhost:8080/flood/stations?stations=1,2
 
 ### Return informations about a person or family : (Person if you put first&last name, or Family if you put just last name)
 http://localhost:8080/personInfo?firstName={firstName}&lastName={lastName}
-
+* Family ex :http://localhost:8080/personInfo?lastName=Boyd
+* Person ex : http://localhost:8080/personInfo?firstName=John&lastName=Boyd
+  
 ### Return list of emails of all the perons in the city :
 http://localhost:8080/communityEmail?city={city}
+* Ex : http://localhost:8080/communityEmail?city=Culver
 
 ## POST/PUT/DELETE
 ### JSON Body for /person
