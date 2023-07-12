@@ -95,7 +95,7 @@ public class PersonServiceImpl implements PersonService {
     public List<ChildDTO> childAlert(String address) {
         List<Person> listPersonsAtTheAddress = getPersonsAtAddress(address);
         if (listPersonsAtTheAddress.isEmpty()) {
-            log.error("Address not found");
+            log.debug("Address not found");
         }
         List<MedicalRecord> medicalRecords = listPersonsAtTheAddress
                 .stream()

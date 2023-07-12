@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.business;
 
 import com.safetynet.safetynetalerts.DTO.*;
 import com.safetynet.safetynetalerts.exceptions.FirestationNotFoundException;
+import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.Firestation;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
@@ -82,7 +83,7 @@ public class FirestationServiceImpl implements FirestationService {
                 .filter(p -> p.getStation().equals(firestationNumber))
                 .toList();
         if (addressServedByFirestation.isEmpty()) {
-            log.error("firestation not found");
+            log.debug("firestation not found", new NotFoundException(Firestation.class, firestationNumber.toString()));
         }
         for (Firestation firestation : addressServedByFirestation) {
             listPersonsCoverByStation.addAll(personRepository.getAll()
@@ -172,7 +173,7 @@ public class FirestationServiceImpl implements FirestationService {
                 .map(Firestation::getAddress)
                 .toList();
         if (firestationAddresses.isEmpty()) {
-            log.error("No address for these firestation(s) number(s)");
+            log.debug("No address for these firestation(s) number(s)");
         }
 
         List<InfosPersonForFloodAlertDTO> infosPersonsForFloodAlertByAddress = personRepository.getAll()
