@@ -44,7 +44,7 @@ public class PersonController {
     public ResponseEntity<HttpStatus> deletePerson(@Valid @RequestBody Person person) {
         log.info("Ask to delete person : {}", person.getId());
         personService.deletePerson(person);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/childAlert")

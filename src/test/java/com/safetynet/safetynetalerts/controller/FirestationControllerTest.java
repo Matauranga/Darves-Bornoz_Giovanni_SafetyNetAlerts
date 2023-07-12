@@ -70,7 +70,7 @@ public class FirestationControllerTest {
                         .content(new ObjectMapper().writeValueAsString(firestationToDeleteTest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -104,6 +104,13 @@ public class FirestationControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firestationServingThem").value("3"))
                 .andExpect(content().string(containsString("aznol:350mg")))
                 .andExpect(content().string(containsString("Felicia")));
+    }
+
+    @Test
+    @DisplayName("test KO de fire alert, appel de RestResponseEntityExceptionHandler ")
+    void fireAlertAtAddressNotFoundTest() throws Exception {
+        mockMvc.perform(get("/fire?address=1509 Culver"))
+                .andExpect(status().isNotFound());
     }
 
     @Test

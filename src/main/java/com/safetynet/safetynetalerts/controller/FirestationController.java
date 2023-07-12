@@ -46,7 +46,7 @@ public class FirestationController {
     public ResponseEntity<HttpStatus> deleteFirestation(@Valid @RequestBody Firestation firestation) {
         log.info("Ask to delete firestation : {}", firestation.getId());
         firestationService.deleteFirestation(firestation);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/phoneAlert")

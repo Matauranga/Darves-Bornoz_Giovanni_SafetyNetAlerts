@@ -164,6 +164,21 @@ class FirestationServiceImplTest {
     }
 
     @Test
+    @DisplayName("test de getPersonsCoverByFirestation if no firestation is found")
+    void getPersonsCoverByFirestationWithFirestationNotFoundTest() {
+        //Given initials lists of persons, medical records and firestation and an expected person
+        initExistingPersonsMedicalRecordsAndFirestation();
+
+        //When we search persons cover by the firestation 10000
+        List<Person> response = firestationServiceImpl.getPersonsCoverByFirestation(10000);
+
+        //Then we verify if this have works correctly and if the response is empty
+        verify(firestationRepository, times(1)).getAll();
+        verify(personRepository, times(0)).getAll();
+        assertThat(response).isEmpty();
+    }
+
+    @Test
     @DisplayName("test de getPhoneByFirestation")
     void getPhoneByFirestationTest() {
         //Given initials lists of persons, medical records and firestation and an expected person
@@ -277,5 +292,18 @@ class FirestationServiceImplTest {
         //Then we verify if the response contain
         assertThat(response.get(0).getAddress()).isEqualTo(expectedAddress1);
         assertThat(response.get(1).getAddress()).isEqualTo(expectedAddress2);
+    }
+
+    @Test
+    @DisplayName("test de getHouseholdServedByFirestation for firestation(s) not found")
+    void getHouseholdsServedByFirestationWithFirestationNotFoundTest() {
+        //Given initials lists of persons, medical records and firestation and an expected address
+        initExistingPersonsMedicalRecordsAndFirestation();
+
+        //When we send the request
+        List<FloodAlertDTO> response = firestationServiceImpl.getHouseholdServedByFirestation(Set.of(10000));
+
+        //Then we verify if the response is empty
+        assertThat(response).isEmpty();
     }
 }

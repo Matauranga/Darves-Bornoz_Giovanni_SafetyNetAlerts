@@ -192,6 +192,19 @@ class PersonServiceImplTest {
     }
 
     @Test
+    @DisplayName("test de getChildByAddress when no address is found")
+    void getChildByAddressWithAddressNotFoundTest() {
+        //Given initials lists of persons, medical records and firestation
+        initExistingPersonsMedicalRecordsAndFirestation();
+
+        //When search child at an address
+        List<ChildDTO> response = personServiceImpl.childAlert("789 Nous irons aux oeufs");
+
+        //Then we verify if the response is empty
+        assertThat(response).isEmpty();
+    }
+
+    @Test
     @DisplayName("test de getEmailByCity")
     void getEmailByCityTest() {
         //Given initial list of person (that contains emails)
