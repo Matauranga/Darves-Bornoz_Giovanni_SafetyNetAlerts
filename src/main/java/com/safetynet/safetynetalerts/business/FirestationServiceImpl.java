@@ -2,7 +2,6 @@ package com.safetynet.safetynetalerts.business;
 
 import com.safetynet.safetynetalerts.DTO.*;
 import com.safetynet.safetynetalerts.exceptions.FirestationNotFoundException;
-import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.Firestation;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
@@ -33,14 +32,18 @@ public class FirestationServiceImpl implements FirestationService {
     MedicalRecordService medicalRecordService;
 
     /**
-     * @return all firestation.
+     * Retrieve all firestations
+     *
+     * @return list of firestation
      */
     public List<Firestation> getAllFirestations() {
         return firestationRepository.getAll();
     }
 
     /**
-     * @param firestation to create.
+     * Create a firestation
+     *
+     * @param firestation the firestation to create
      */
     public void createFirestation(Firestation firestation) {
 
@@ -48,7 +51,9 @@ public class FirestationServiceImpl implements FirestationService {
     }
 
     /**
-     * @param newValueOfFirestation new value of a firestation.
+     * Update the firestation
+     *
+     * @param newValueOfFirestation the new value of object firestation
      */
     public void updateFirestation(Firestation newValueOfFirestation) {
 
@@ -61,7 +66,9 @@ public class FirestationServiceImpl implements FirestationService {
     }
 
     /**
-     * @param firestationToDelete the firestation to delete.
+     * Delete a firestation
+     *
+     * @param firestationToDelete the firestation to delete
      */
     public void deleteFirestation(Firestation firestationToDelete) {
         firestationRepository.delete(firestationToDelete.getId());
@@ -72,8 +79,10 @@ public class FirestationServiceImpl implements FirestationService {
 
 
     /**
-     * @param firestationNumber firestation number.
-     * @return List of persons(Object) cover by the firestation put in @param.
+     * Method that give a list of persons cover by a firestation
+     *
+     * @param firestationNumber the station number
+     * @return list of persons cover by the firestation
      */
     public List<Person> getPersonsCoverByFirestation(Integer firestationNumber) {
 
@@ -83,7 +92,7 @@ public class FirestationServiceImpl implements FirestationService {
                 .filter(p -> p.getStation().equals(firestationNumber))
                 .toList();
         if (addressServedByFirestation.isEmpty()) {
-            log.debug("firestation not found", new NotFoundException(Firestation.class, firestationNumber.toString()));
+            log.debug("No address for these firestation number");
         }
         for (Firestation firestation : addressServedByFirestation) {
             listPersonsCoverByStation.addAll(personRepository.getAll()
@@ -100,8 +109,10 @@ public class FirestationServiceImpl implements FirestationService {
 
 
     /**
-     * @param firestationNumber firestation number.
-     * @return a set of phone number(String) cover by the firestation put in @param.
+     * Method that give a set of phone number(String) cover by the firestation
+     *
+     * @param firestationNumber the station number
+     * @return Set of string containing the phones numbers
      */
     public Set<String> getPhoneByFirestation(Integer firestationNumber) {
         return getPersonsCoverByFirestation(firestationNumber)
@@ -111,8 +122,10 @@ public class FirestationServiceImpl implements FirestationService {
     }
 
     /**
-     * @param firestationNumber firestation number.
-     * @return a list of persons cover by the firestation put in @param, with their first and last name, address, phone number.This give also the adult and child count.
+     * Method that give the list of person cover by a firestation, and the adult and child count.
+     *
+     * @param firestationNumber firestation number
+     * @return a list of persons cover by the firestation, with their first and last name, address, phone number
      */
     public CountAdultChildWithInfosPersonDTO personsListCoveredByFirestationAndAdultChildCount(Integer firestationNumber) {
 
@@ -137,8 +150,10 @@ public class FirestationServiceImpl implements FirestationService {
     }
 
     /**
-     * @param address the address where we want some infos.
-     * @return a list of persons at the address put in @param, with their first and last name, phone number, age, medical records and allergies.This give also the firestation covering them.
+     * Method that give a list of persons at an address and the firestation to call for us
+     *
+     * @param address the address where we want some infos
+     * @return a list of persons with their first and last name, phone number, age, medical records and allergies
      */
     public FireAlertDTO getInfosPersonsLivingAtAddressAndFirestationToCall(String address) {
 
@@ -162,8 +177,10 @@ public class FirestationServiceImpl implements FirestationService {
     }
 
     /**
-     * @param stations a firestation number or a list of firestation number.
-     * @return a list persons cover by the firestations put in @param, with their first and last name, phone number, age, medical records and allergies.They're sort by address.
+     * Method that give a list of persons present in the different households.
+     *
+     * @param stations a firestation number or a list of firestation number
+     * @return lists of persons with their first and last name, phone number, age, medical records and allergies. They're sort by household
      */
     public List<FloodAlertDTO> getHouseholdServedByFirestation(Set<Integer> stations) {
 

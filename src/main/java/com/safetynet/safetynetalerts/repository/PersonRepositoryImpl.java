@@ -1,6 +1,5 @@
 package com.safetynet.safetynetalerts.repository;
 
-import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.Person;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ public class PersonRepositoryImpl implements PersonRepository {
     private DataStorage dataStorage;
 
     /**
+     * Retrieve all persons
+     *
      * @return a list of all persons.
      */
     @Override
@@ -27,6 +28,8 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     /**
+     * Retrieve a person
+     *
      * @param id the id f the person.
      * @return the person searched if it exists.
      */
@@ -34,16 +37,14 @@ public class PersonRepositoryImpl implements PersonRepository {
     public Optional<Person> getById(String id) {
         log.debug("Looking for {}", id);
 
-        Optional<Person> person = dataStorage.getPersons().stream()
+        return dataStorage.getPersons().stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
-        if (person.isEmpty()) {
-            log.error("Person not found", new NotFoundException(Person.class, id));
-        }
-        return person;
     }
 
     /**
+     * Create a person
+     *
      * @param entity a person.
      * @return the person create or update.
      */
@@ -65,6 +66,8 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     /**
+     * Delete a person
+     *
      * @param id the id of the person to delete.
      */
     @Override
@@ -78,7 +81,7 @@ public class PersonRepositoryImpl implements PersonRepository {
             dataStorage.getPersons().remove(personToDelete);
             log.debug("Person deleted");
         } else {
-            log.error("Person not found", new NotFoundException(Person.class, id));
+            log.debug("Person not found");
         }
     }
 

@@ -24,13 +24,17 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     MedicalRecordRepository medicalRecordRepository;
 
     /**
-     * @return all medical record
+     * Retrieve all medical record
+     *
+     * @return list of medical record
      */
     public List<MedicalRecord> getAllMedicalRecords() {
         return medicalRecordRepository.getAll();
     }
 
     /**
+     * Retrieve a medical record
+     *
      * @param id firstname and lastname of the person whose medical record sought
      * @return the medical record search
      */
@@ -44,6 +48,8 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     }
 
     /**
+     * Create a medical record
+     *
      * @param medicalRecord to create
      */
     public void createMedicalRecord(MedicalRecord medicalRecord) {
@@ -52,6 +58,8 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     }
 
     /**
+     * Update the medical record
+     *
      * @param newValuesOfMedicalRecord new values of medical record
      */
     public void updateMedicalRecord(MedicalRecord newValuesOfMedicalRecord) {
@@ -65,6 +73,8 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     }
 
     /**
+     * Delete a medical record
+     *
      * @param medicalRecordToDelete the medical record to delete
      */
     public void deleteMedicalRecord(MedicalRecord medicalRecordToDelete) {

@@ -31,6 +31,8 @@ public class PersonServiceImpl implements PersonService {
     MedicalRecordService medicalRecordService;
 
     /**
+     * Retrieve all persons
+     *
      * @return List of all persons
      */
     public List<Person> getAllPersons() {
@@ -38,6 +40,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
+     * Retrieve a person
+     *
      * @param id of the person search
      * @return the person search
      */
@@ -46,13 +50,17 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
-     * @param person to create
+     * Create a person
+     *
+     * @param person the person to create
      */
     public void createPerson(Person person) {
         personRepository.saveOrUpdate(person);
     }
 
     /**
+     * Update the person
+     *
      * @param newValuesOfPerson the new values of person
      */
     public void updatePerson(Person newValuesOfPerson) {
@@ -66,6 +74,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
+     * Delete a person
+     *
      * @param personToDelete the person to delete
      */
 
@@ -78,8 +88,10 @@ public class PersonServiceImpl implements PersonService {
 
 
     /**
+     * Retrieve all persons at an address given
+     *
      * @param address where want the persons living
-     * @return a list of persons(Object)
+     * @return a list of persons
      */
     public List<Person> getPersonsAtAddress(String address) {
         return personRepository.getAll()
@@ -89,8 +101,10 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
+     * Method that give information about child(s) in a household
+     *
      * @param address where is the alert
-     * @return child list's present, with their first and last name, age and a list of who lives with them.
+     * @return child list's present, with their first and last name, age and a list of who lives with them
      */
     public List<ChildDTO> childAlert(String address) {
         List<Person> listPersonsAtTheAddress = getPersonsAtAddress(address);
@@ -118,8 +132,10 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
+     * Get all person's emails in a city
+     *
      * @param city the city
-     * @return the set of emails of people living in the city put in @param.
+     * @return a set of emails
      */
     public Set<String> getEmailByCity(String city) {
         return personRepository.getAll()
@@ -130,10 +146,12 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
+     * Method that give all information about a person or a family
+     *
      * @param firstName Optional : the first name to have a specific person
      * @param lastName  Mandatory : the last name
      * @return : - With first name : a specific person
-     * - Without first name : the list of persons with that name.
+     * - Without first name : the list of persons with that name
      */
     public List<AllInfosPersonDTO> getInfosPersonByID(String lastName, String firstName) {
 

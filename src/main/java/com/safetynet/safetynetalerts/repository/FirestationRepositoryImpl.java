@@ -1,6 +1,5 @@
 package com.safetynet.safetynetalerts.repository;
 
-import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.Firestation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ public class FirestationRepositoryImpl implements FirestationRepository {
     DataStorage dataStorage;
 
     /**
+     * Retrieve all firestations
+     *
      * @return a list of all firestations.
      */
     @Override
@@ -27,6 +28,8 @@ public class FirestationRepositoryImpl implements FirestationRepository {
     }
 
     /**
+     * Retrieve a firestation
+     *
      * @param id the id of firestation.
      * @return a firestation if she exists.
      */
@@ -34,16 +37,14 @@ public class FirestationRepositoryImpl implements FirestationRepository {
     public Optional<Firestation> getById(String id) {
         log.debug("Looking for the firestation serving the : {}", id);
 
-        Optional<Firestation> firestation = dataStorage.getFirestations().stream()
+        return dataStorage.getFirestations().stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
-        if (firestation.isEmpty()) {
-            log.error("Firestation doesn't exist", new NotFoundException(Firestation.class, id));
-        }
-        return firestation;
     }
 
     /**
+     * Create a firestation
+     *
      * @param entity a firestation.
      * @return the firestation create or update.
      */
@@ -65,6 +66,8 @@ public class FirestationRepositoryImpl implements FirestationRepository {
     }
 
     /**
+     * Delete a firestation
+     *
      * @param id the id of firestation to delete.
      */
     @Override
@@ -77,7 +80,7 @@ public class FirestationRepositoryImpl implements FirestationRepository {
             dataStorage.getFirestations().remove(firestationToDelete);
             log.debug("Firestation deleted");
         } else {
-            log.error("Firestation not found", new NotFoundException(Firestation.class, id));
+            log.debug("Firestation not found");
         }
     }
 

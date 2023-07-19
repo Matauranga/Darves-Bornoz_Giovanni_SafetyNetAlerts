@@ -1,6 +1,5 @@
 package com.safetynet.safetynetalerts.repository;
 
-import com.safetynet.safetynetalerts.exceptions.NotFoundException;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     DataStorage dataStorage;
 
     /**
+     * Retrieve all medical record
+     *
      * @return a list of all medical records.
      */
     @Override
@@ -27,6 +28,8 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     }
 
     /**
+     * Retrieve a medical record
+     *
      * @param id the id of medical record.
      * @return a medical record if it exists.
      */
@@ -34,16 +37,14 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     public Optional<MedicalRecord> getById(String id) {
         log.debug("Looking for {} medical record", id);
 
-        Optional<MedicalRecord> medicalRecord = dataStorage.getMedicalRecords().stream()
+        return dataStorage.getMedicalRecords().stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
-        if (medicalRecord.isEmpty()) {
-            log.error("Medical record not found", new NotFoundException(MedicalRecord.class, id));
-        }
-        return medicalRecord;
     }
 
     /**
+     * Create a medical record
+     *
      * @param entity a medical record.
      * @return the medical record create or update.
      */
@@ -66,6 +67,8 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
     }
 
     /**
+     * Delete a medical record
+     *
      * @param id the id of medical record to delete.
      */
     @Override
@@ -78,7 +81,7 @@ public class MedicalRecordRepositoryImpl implements MedicalRecordRepository {
             dataStorage.getMedicalRecords().remove(medicalRecordToDelete);
             log.debug("Medical record deleted");
         } else {
-            log.error("Medical record not found", new NotFoundException(MedicalRecord.class, id));
+            log.debug("Medical record not found");
         }
     }
 }
