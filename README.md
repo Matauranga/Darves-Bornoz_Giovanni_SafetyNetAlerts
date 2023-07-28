@@ -1,9 +1,5 @@
 # Darves-Bornoz_Giovanni_SafetyNetAlerts
-<<<<<<< HEAD
-Safety Net Alerts an OpenClassrooms project.
 
-developpement sur la branch "dev".
-=======
 Safety Net Alerts is an application that aims to send information to emergency services systems.
 
 # API
